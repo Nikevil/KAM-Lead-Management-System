@@ -1,12 +1,16 @@
 const express = require('express');
 const interactionController = require('../controllers/interactionController');
-const validationMiddleware = require('../middlewares/validationMiddleware');
-const interactionValidation = require('../validations/interactionValidation');
+// const validationMiddleware = require('../middlewares/validationMiddleware');
+// const interactionValidation = require('../validations/interactionValidation');
 const router = express.Router();
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize.js');
 
-router.get('/', authenticate, authorize(['admin', 'kam', 'manager', 'sales']), interactionController.getInteractions);
-router.post('/', authenticate, authorize(['admin', 'kam', 'manager']), validationMiddleware(interactionValidation.createInteraction), interactionController.createInteraction);
+router.post('/', authenticate, authorize(['Admin', 'Kam']), interactionController.createInteraction);
+router.get('/:id', authenticate, interactionController.getInteractionById);
+router.get('/lead/:leadId', authenticate, interactionController.getInteractionsByLeadId);
+router.put('/:id', authenticate, authorize(['Admin', 'Kam']), interactionController.updateInteraction);
+router.delete('/:id', authenticate, authorize(['Admin']), interactionController.deleteInteraction);
+
 
 module.exports = router;
