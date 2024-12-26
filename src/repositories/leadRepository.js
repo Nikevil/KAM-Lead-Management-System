@@ -1,38 +1,48 @@
-const Lead = require('../models/Lead');
+const db = require('../models');
 
 class LeadRepository {
   // Get all leads with optional filters
-  async getAll(filters = {}) {
-    return Lead.findAll({ where: filters });
+  async getAllLeads(filters = {}) {
+    return db.Lead.findAll({ where: filters });
   }
 
   // Get a lead by ID
-  async getById(id) {
-    return Lead.findByPk(id);
+  async findLeadById(id) {
+    return db.Lead.findByPk(id);
+  }
+
+  async validateLead(restaurantName, location) {
+    const existingLead = await db.Lead.findOne({
+      where: {
+        restaurantName,
+        location
+      }
+    });
+    if (existingLead) throw new Error('Lead already exists');
   }
 
   // Create a new lead
-  async create(leadData) {
-    return Lead.create(leadData);
+  async createLead(leadData) {
+    return db.Lead.create(leadData);
   }
 
   // Update a lead by ID
-  async update(id, leadData) {
-    const lead = await Lead.findByPk(id);
+  async updateLead(id, leadData) {
+    const lead = await db.Lead.findByPk(id);
     if (!lead) throw new Error('Lead not found');
-    return lead.update(leadData);
+    return db.Lead.update(leadData);
   }
 
   // Delete a lead
-  async delete(id) {
-    const lead = await Lead.findByPk(id);
+  async deleteLead(id) {
+    const lead = await db.Lead.findByPk(id);
     if (!lead) throw new Error('Lead not found');
-    return lead.destroy();
+    return db.Lead.destroy();
   }
 
   async getLeadsRequiringCallsToday() {
     const today = new Date();
-    return await Lead.findAll({
+    return await db.Lead.findAll({
       where: {
         nextCallDate: {
           [Op.lte]: today
@@ -42,7 +52,7 @@ class LeadRepository {
   }
 
   async getWellPerformingAccounts() {
-    return await Lead.findAll({
+    return await db.Lead.findAll({
       where: {
         orderCount: {
           [Op.gte]: 10
@@ -52,7 +62,7 @@ class LeadRepository {
   }
 
   async getUnderperformingAccounts() {
-    return await Lead.findAll({
+    return await db.Lead.findAll({
       where: {
         orderCount: {
           [Op.lt]: 5
@@ -62,11 +72,11 @@ class LeadRepository {
   }
 
   async calculateAccountPerformanceMetrics() {
-    const leads = await Lead.findAll();
+    const leads = await db.Lead.findAll();
     leads.forEach(async lead => {
       const daysSinceFirstOrder = (new Date() - new Date(lead.createdAt)) / (1000 * 60 * 60 * 24);
       lead.performanceMetric = lead.orderCount / daysSinceFirstOrder;
-      await lead.save();
+      await db.Lead.save();
     });
   }
 }

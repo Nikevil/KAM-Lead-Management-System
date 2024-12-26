@@ -1,39 +1,60 @@
 module.exports = (sequelize, DataTypes) => {
-    const Contact = sequelize.define('Contact', {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+  const Contact = sequelize.define('Contact', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true, // Ensures name is not empty
       },
-      leadId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
+    },
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true, // Ensures phone is not empty
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true, // Allow email to be nullable if not required
+      validate: {
+        isEmail: true, // Ensures the value is a valid email
       },
-      phone: {
-        type: DataTypes.STRING,
-        allowNull: false,
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true, // Ensures role is not empty
       },
-      email: {
-        type: DataTypes.STRING,
-        validate: { isEmail: true },
-      },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-    }, {
-      tableName: 'contacts',
-      timestamps: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+  }, {
+    tableName: 'contacts',
+    timestamps: false, // Adds createdAt and updatedAt
+  });
+
+  // Associations
+  Contact.associate = (models) => {
+    // A contact can have many leads through the LeadContacts mapping table
+    Contact.belongsToMany(models.Lead, {
+      through: models.LeadContacts, // The mapping table
+      foreignKey: 'contactId', // The foreign key in LeadContacts
+      otherKey: 'leadId', // The other foreign key in LeadContacts
     });
-  
-    Contact.associate = (models) => {
-      Contact.belongsTo(models.Lead, { foreignKey: 'leadId' });
-    };
-  
-    return Contact;
   };
-  
+
+  return Contact;
+};

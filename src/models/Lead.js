@@ -40,7 +40,7 @@ module.exports = (sequelize) => {
 
   // Associations
   Lead.associate = (models) => {
-    Lead.hasMany(models.POC, { foreignKey: 'leadId' });
+    Lead.hasMany(models.LeadContacts, { foreignKey: 'leadId' });
     Lead.hasMany(models.Interaction, { foreignKey: 'leadId' });
     Lead.hasMany(models.InteractionLog, { foreignKey: 'leadId' });
   };

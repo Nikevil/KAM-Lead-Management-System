@@ -12,7 +12,7 @@ exports.getLeads = async (req, res, next) => {
 
 exports.getLeadById = async (req, res, next) => {
   try {
-    const lead = await leadRepository.getLeadById(req.params.id);
+    const lead = await leadRepository.findLeadById(req.params.id);
     if (!lead) return res.status(404).json({ message: 'Lead not found' });
     res.status(200).json(lead);
   } catch (error) {
@@ -23,15 +23,15 @@ exports.getLeadById = async (req, res, next) => {
 exports.addLead = async (req, res, next) => {
   const { restaurantName, cuisineType, location, leadSource, leadStatus } = req.body;
   try {
-    await leadRepository.validateLead(restaurantName);
-    const lead = await leadRepository.create({
+    await leadRepository.validateLead(restaurantName, location);
+    const lead = await leadRepository.createLead({
       restaurantName,
       cuisineType,
       location,
       leadSource,
       leadStatus,
     });
-    res.status(201).json(lead);
+    res.status(201).json({ message: 'Lead added successfully', lead });
   } catch (error) {
     next(error);
   }
@@ -39,9 +39,6 @@ exports.addLead = async (req, res, next) => {
 
 exports.updateLead = async (req, res, next) => {
   try {
-    const lead = await leadRepository.getLeadById(req.params.id);
-    if (!lead) return res.status(404).json({ message: 'Lead not found' });
-
     const updatedLead = await leadRepository.updateLead(req.params.id, req.body);
     res.status(200).json(updatedLead);
   } catch (error) {

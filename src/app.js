@@ -15,6 +15,7 @@ const interactionRoutes = require('./routes/interactionRoutes');
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const authRoutes = require('./routes/authRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 // Use routes
 app.use('/api/leads', leadRoutes);
@@ -22,6 +23,7 @@ app.use('/api/interactions', interactionRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // Error handling middleware
 const errorHandler = require('./middlewares/errorHandler');

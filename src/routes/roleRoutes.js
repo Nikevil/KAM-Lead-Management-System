@@ -11,7 +11,7 @@ router.post('/', authenticate, authorize('Admin'), roleController.addRole);
 router.get('/:id', authenticate, roleController.getRoleById);
 
 //Get all roles
-router.get('/', authenticate, roleController.getAllRoles);
+router.get('/', authenticate, roleController.getRoles);
 
 // Update role by ID
 router.put('/:id', authenticate, authorize('Admin'), roleController.updateRole);

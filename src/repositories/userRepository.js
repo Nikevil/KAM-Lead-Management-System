@@ -5,7 +5,7 @@ class UserRepository {
     return await db.User.create({ username, password, email, status });
   }
 
-  async getAll() {
+  async getAllUsers() {
     return db.User.findAll(
       {
       attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt'],

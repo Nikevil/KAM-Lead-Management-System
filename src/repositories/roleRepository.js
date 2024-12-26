@@ -2,12 +2,12 @@ const db = require('../models');
 
 class RoleRepository {
   // Get all roles with optional filters
-  async getAll(filters = {}) {
+  async getAllRoles(filters = {}) {
     return db.Role.findAll({ where: filters });
   }
 
   // Get a role by ID
-  async getById(id) {
+  async findRoleById(id) {
     return db.Role.findByPk(id);
   }
 
@@ -23,7 +23,7 @@ class RoleRepository {
   }
 
   // Create a new role
-  async create(roleData) {
+  async createRole(roleData) {
     const { name } = roleData;
 
     // Check for duplicate role name before creation
@@ -36,7 +36,7 @@ class RoleRepository {
   }
 
   // Update a role by ID
-  async update(id, roleData) {
+  async updateRole(id, roleData) {
     const { name } = roleData;
 
     // Find the role by ID
@@ -54,7 +54,7 @@ class RoleRepository {
   }
 
   // "Delete" a role (set status to inactive)
-  async delete(id) {
+  async deleteRole(id) {
     const role = await db.Role.findByPk(id);
     if (!role) throw new Error('Role not found');
 

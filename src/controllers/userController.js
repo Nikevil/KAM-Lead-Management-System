@@ -2,14 +2,14 @@ const userRepository = require('../repositories/userRepository');
 const roleRepository = require('../repositories/roleRepository');
 const { Op } = require('sequelize');
 
-exports.addUser = async (req, res) => {
+exports.addUser = async (req, res, next) => {
   const { username, password, email, status, roles } = req.body;
   try {
     // Validate if the user already exists
     await userRepository.validateUser(username);
 
     // Validate roles
-    const validRoles = await roleRepository.getAll({
+    const validRoles = await roleRepository.getAllRoles({
       id: {
         [Op.in]: roles,
       },
@@ -28,30 +28,30 @@ exports.addUser = async (req, res) => {
 
     res.status(201).json({ message: 'User added successfully', user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
   try {
-    const users = await userRepository.getAll();
+    const users = await userRepository.getAllUsers();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.getUserById = async (req, res) => {
+exports.getUserById = async (req, res, next) => {
   try {
     const user = await userRepository.findUserById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
   const { username, roles } = req.body;
   try {
     const user = await userRepository.findUserById(req.params.id);
@@ -62,7 +62,7 @@ exports.updateUser = async (req, res) => {
 
     // Validate and update roles
     if (roles) {
-      const validRoles = await roleRepository.getAll({ id: roles });
+      const validRoles = await roleRepository.getAllRoles({ id: roles });
       if (validRoles.length !== roles.length) {
         return res.status(400).json({ message: 'Invalid roles provided' });
       }
@@ -72,11 +72,11 @@ exports.updateUser = async (req, res) => {
     await user.save();
     res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
   try {
     const user = await userRepository.findUserById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
@@ -84,6 +84,6 @@ exports.deleteUser = async (req, res) => {
     await user.destroy();
     res.status(204).json();
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
