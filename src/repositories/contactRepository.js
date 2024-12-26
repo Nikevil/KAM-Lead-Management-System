@@ -91,8 +91,8 @@ class ContactRepository {
     }
   }
 
-    // Add contacts to a lead
-  async addContactsToLead(leadId, contacts) {
+  // Add contacts to a lead
+  async addContactsToLead({ leadId, contacts }) {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
@@ -112,13 +112,18 @@ class ContactRepository {
         (contact) => !existingPhoneNumbers.includes(contact.phone)
       );
 
+      let createdContacts = [];
       // Use bulkCreate to create valid contacts
       if (validContacts.length > 0) {
-        const createdContacts = await db.Contact.bulkCreate(validContacts);
-        await lead.addContacts(createdContacts);
+        createdContacts = await db.Contact.bulkCreate(validContacts);
+        const leadContacts = createdContacts.map((contact) => ({
+          leadId: lead.id,
+          contactId: contact.id,
+        }));
+        await db.LeadContacts.bulkCreate(leadContacts);
       }
 
-      return lead;
+      return createdContacts;
     } catch (error) {
       throw new Error("Error adding contacts to lead: " + error.message);
     }
