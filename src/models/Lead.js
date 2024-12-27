@@ -27,6 +27,19 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM('New', 'In Progress', 'Follow Up', 'Closed', 'Won', 'Lost'),
       defaultValue: 'New',
     },
+    callFrequency: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 7,
+    },
+    lastCallDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    nextCallDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
   }, {
     tableName: 'leads',
     timestamps: true,

@@ -1,4 +1,3 @@
-// File: src/controllers/leadController.js
 const leadRepository = require('../repositories/leadRepository');
 
 exports.getLeads = async (req, res, next) => {
@@ -58,10 +57,58 @@ exports.deleteLead = async (req, res, next) => {
   }
 };
 
-exports.getLeadsRequiringCallsToday = async (req, res, next) => {
+exports.getLeadsRequiringCalls = async (req, res, next) => {
   try {
-    const leads = await leadRepository.getLeadsRequiringCallsToday();
+    const leads = await callPlanningRepository.getLeadsRequiringCalls();
+
+    if (!leads || leads.length === 0) {
+      return res.status(404).json({ error: "No leads requiring calls today" });
+    }
+
     res.status(200).json(leads);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.recordCall = async (req, res, next) => {
+  try {
+    const { leadId } = req.body;
+
+    if (!leadId) {
+      return res.status(400).json({ error: "leadId is required" });
+    }
+
+    const updatedLead = await callPlanningRepository.recordCall(leadId);
+
+    res.status(200).json({
+      message: "Call recorded successfully",
+      lead: updatedLead,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateCallFrequency = async (req, res, next) => {
+  try {
+    const { leadId, callFrequency } = req.body;
+
+    if (!leadId || !callFrequency) {
+      return res
+        .status(400)
+        .json({ error: "leadId and callFrequency are required" });
+    }
+
+    const updatedLead = await callPlanningRepository.updateCallFrequency(
+      leadId,
+      callFrequency
+    );
+
+    res.status(200).json({
+      message: "Call frequency updated successfully",
+      lead: updatedLead,
+    });
   } catch (error) {
     next(error);
   }
