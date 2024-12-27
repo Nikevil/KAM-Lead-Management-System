@@ -33,17 +33,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true, // Ensures role is not empty
       },
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   }, {
     tableName: 'contacts',
-    timestamps: false, // Adds createdAt and updatedAt
+    timestamps: true, // Adds createdAt and updatedAt
   });
 
   // Associations
@@ -54,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'contactId', // The foreign key in LeadContacts
       otherKey: 'leadId', // The other foreign key in LeadContacts
     });
+    Contact.hasMany(models.Interaction, { foreignKey: 'contactId' });
   };
 
   return Contact;

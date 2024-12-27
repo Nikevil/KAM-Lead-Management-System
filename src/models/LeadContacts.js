@@ -25,18 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('active', 'inactive'),
       defaultValue: 'active',
     },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
   }, 
   {
     tableName: 'lead_contacts',
-    timestamps: false,
+    timestamps: true,
   });
 
   return LeadContacts;

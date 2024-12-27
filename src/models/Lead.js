@@ -29,7 +29,7 @@ module.exports = (sequelize) => {
     },
   }, {
     tableName: 'leads',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         unique: true,
@@ -42,7 +42,6 @@ module.exports = (sequelize) => {
   Lead.associate = (models) => {
     Lead.hasMany(models.LeadContacts, { foreignKey: 'leadId' });
     Lead.hasMany(models.Interaction, { foreignKey: 'leadId' });
-    Lead.hasMany(models.InteractionLog, { foreignKey: 'leadId' });
   };
 
   return Lead;

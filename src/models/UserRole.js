@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: 'user_roles',
-      timestamps: false, // Set to true if you want Sequelize to manage timestamps
+      timestamps: true, // Set to true if you want Sequelize to manage timestamps
     }
   );
 

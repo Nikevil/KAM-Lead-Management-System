@@ -62,7 +62,6 @@ module.exports = (sequelize, DataTypes) => {
   // Associations
   User.associate = (models) => {
     User.hasMany(models.Interaction, { foreignKey: 'userId' });
-    User.hasMany(models.InteractionLog, { foreignKey: 'userId' });
     User.belongsToMany(models.Role, { through: models.UserRole, foreignKey: 'userId' });
   };
 

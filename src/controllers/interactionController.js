@@ -3,14 +3,17 @@ const interactionRepository = require('../repositories/InteractionRepository');
 // Create a new interaction
 exports.createInteraction = async (req, res, next) => {
   try {
-    const { leadId, interactionType, interactionDate, notes } = req.body;
+    const { leadId, interactionType, interactionDate, notes, contactId, duration, outcome } = req.body;
     const userId = req.user.id;
     const newInteraction = await interactionRepository.createInteraction({
       leadId,
       userId,
       interactionType,
       interactionDate,
-      notes
+      notes,
+      contactId,
+      duration,
+      outcome,
     });
     res.status(201).json({ message: 'Interaction created', interaction: newInteraction });
   } catch (error) {

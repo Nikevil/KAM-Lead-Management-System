@@ -2,7 +2,7 @@ const db = require('../models');
 
 class InteractionRepository {
   // Create a new interaction
-  async createInteraction({ leadId, userId, interactionType, interactionDate, notes }) {
+  async createInteraction({ leadId, userId, interactionType, interactionDate, notes, contactId, outcome, duration }) {
     try {
       const newInteraction = await db.Interaction.create({
         leadId,
@@ -10,6 +10,9 @@ class InteractionRepository {
         interactionType,
         interactionDate,
         notes,
+        contactId,
+        outcome,
+        duration,
       });
       return newInteraction;
     } catch (error) {
