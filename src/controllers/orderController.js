@@ -1,21 +1,34 @@
-const orderRepository = require('../repositories/OrderRepository'); // Assuming you have a repository for Order Model
+const orderRepository = require("../repositories/orderRepository");
 
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const { leadId, amount, productCategories, orderDate } = req.body;
+    const {
+      leadId,
+      amount,
+      productCategories,
+      orderDate,
+      status,
+      notes,
+      orderDetails,
+    } = req.body;
     const userId = req.user.id;
 
-    // Create the order using the repository
     const newOrder = await orderRepository.createOrder({
       leadId,
       userId,
       orderDetails,
-      interactionId,
       productCategories,
+      orderDate,
+      status,
+      notes,
+      amount,
     });
 
-    res.status(201).json({ message: 'Order created successfully', order: newOrder });
+    res.status(201).json({
+      message: "Order created successfully",
+      order: newOrder,
+    });
   } catch (error) {
     next(error);
   }
@@ -30,7 +43,9 @@ exports.getOrdersByLeadId = async (req, res, next) => {
     const orders = await orderRepository.getOrdersByLeadId(leadId);
 
     if (!orders || orders.length === 0) {
-      return res.status(404).json({ error: 'No orders found for this lead.' });
+      return res.status(404).json({
+        error: "No orders found for this lead.",
+      });
     }
 
     res.status(200).json(orders);
@@ -48,10 +63,36 @@ exports.getOrderById = async (req, res, next) => {
     const order = await orderRepository.getOrderById(id);
 
     if (!order) {
-      return res.status(404).json({ error: 'Order not found.' });
+      return res.status(404).json({
+        error: "Order not found.",
+      });
     }
 
     res.status(200).json(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get orders with specific filters (for trends, performance analysis, etc.)
+exports.getFilteredOrders = async (req, res, next) => {
+  try {
+    const { startDate, endDate, productCategory } = req.query;
+
+    // Get orders based on filtering criteria like date range and product category
+    const filteredOrders = await orderRepository.getFilteredOrders({
+      startDate,
+      endDate,
+      productCategory,
+    });
+
+    if (!filteredOrders || filteredOrders.length === 0) {
+      return res.status(404).json({
+        error: "No orders found matching the criteria.",
+      });
+    }
+
+    res.status(200).json(filteredOrders);
   } catch (error) {
     next(error);
   }
@@ -67,10 +108,15 @@ exports.updateOrder = async (req, res, next) => {
     const updatedOrder = await orderRepository.updateOrder(id, orderData);
 
     if (!updatedOrder) {
-      return res.status(404).json({ error: 'Order not found.' });
+      return res.status(404).json({
+        error: "Order not found.",
+      });
     }
 
-    res.status(200).json(updatedOrder);
+    res.status(200).json({
+      message: "Order updated successfully",
+      order: updatedOrder,
+    });
   } catch (error) {
     next(error);
   }
@@ -85,28 +131,15 @@ exports.deleteOrder = async (req, res, next) => {
     const deletedOrder = await orderRepository.deleteOrder(id);
 
     if (!deletedOrder) {
-      return res.status(404).json({ error: 'Order not found.' });
+      return res.status(404).json({
+        error: "Order not found.",
+      });
     }
 
-    res.status(200).json({ message: 'Order deleted successfully', order: deletedOrder });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Get orders with specific filters (for trends, performance analysis, etc.)
-exports.getFilteredOrders = async (req, res, next) => {
-  try {
-    const { startDate, endDate, productCategory } = req.query;
-
-    // Get orders based on filtering criteria like date range and product category
-    const filteredOrders = await orderRepository.getFilteredOrders({ startDate, endDate, productCategory });
-
-    if (!filteredOrders || filteredOrders.length === 0) {
-      return res.status(404).json({ error: 'No orders found matching the criteria.' });
-    }
-
-    res.status(200).json(filteredOrders);
+    res.status(200).json({
+      message: "Order deleted successfully",
+      order: deletedOrder,
+    });
   } catch (error) {
     next(error);
   }

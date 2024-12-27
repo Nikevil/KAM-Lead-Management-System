@@ -1,8 +1,8 @@
 const db = require('../models');
 
 class UserRepository {
-  async createUser(username, password, email, status = 'active') {
-    return await db.User.create({ username, password, email, status });
+  async createUser(name, username, password, email, status = 'active', phone) {
+    return await db.User.create({ name, username, password, email, status, phone });
   }
 
   async getAllUsers() {
@@ -17,8 +17,8 @@ class UserRepository {
     });
   }
 
-  async validateUser(username, status = 'active') {
-    const user = await db.User.findOne({ where: { username, status } });
+  async validateUser(whereCondition) {
+    const user = await db.User.findOne({ where: whereCondition });
     if (user) {
       throw new Error('User already exists');
     }
@@ -34,7 +34,6 @@ class UserRepository {
       }]
     });
   }
-  
 
   async findUserByUsername(username, status = 'active') {
     return await db.User.findOne({
@@ -46,6 +45,29 @@ class UserRepository {
     });
   }
   
+  async updateUser({ name, username, email, phone, status, roles }, id) {
+    const user = await db.User.findByPk(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const whereCondition = {
+      status: 'active',
+    };
+    if (username) {
+      whereCondition.username = username;
+    }
+    if (email) {
+      whereCondition.email = email;
+    }
+    if (phone) {
+      whereCondition.phone = phone;
+    }
+    await this.validateUser(whereCondition);
+
+    await db.User.update({ name, email, username, phone, status }, { where: { id } });
+    return user;
+  }
 
   async addUserRoles(userRoles) {
     return await db.UserRole.bulkCreate(userRoles);

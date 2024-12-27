@@ -1,9 +1,9 @@
-const interactionRepository = require('../repositories/InteractionRepository');
+const interactionRepository = require('../repositories/interactionRepository');
 
 // Create a new interaction
 exports.createInteraction = async (req, res, next) => {
   try {
-    const { leadId, interactionType, interactionDate, notes, contactId, duration, outcome } = req.body;
+    const { leadId, interactionType, interactionDate, notes, contactId, duration, outcome, orderId } = req.body;
     const userId = req.user.id;
     const newInteraction = await interactionRepository.createInteraction({
       leadId,
@@ -14,6 +14,7 @@ exports.createInteraction = async (req, res, next) => {
       contactId,
       duration,
       outcome,
+      orderId,
     });
     res.status(201).json({ message: 'Interaction created', interaction: newInteraction });
   } catch (error) {
@@ -55,7 +56,7 @@ exports.updateInteraction = async (req, res, next) => {
     if (!updatedInteraction) {
       return res.status(404).json({ error: 'Interaction not found' });
     }
-    res.status(200).json(updatedInteraction);
+    res.status(200).json({ message: 'Interaction updated', interaction: updatedInteraction });
   } catch (error) {
     next(error);
   }
