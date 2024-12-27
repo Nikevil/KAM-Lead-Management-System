@@ -16,6 +16,7 @@ const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const authRoutes = require('./routes/authRoutes');
 const contactRoutes = require('./routes/contactRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 
 // Use routes
 app.use('/api/leads', leadRoutes);
@@ -24,6 +25,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Error handling middleware
 const errorHandler = require('./middlewares/errorHandler');

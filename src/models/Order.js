@@ -42,6 +42,10 @@ module.exports = (sequelize) => {
       allowNull: true,
       comment: 'Additional information about the order',
     },
+    orderDetails: {
+      type: DataTypes.JSONB,
+      allowNull: true,
+    },
   }, {
     tableName: 'orders',
     timestamps: true,
@@ -50,7 +54,7 @@ module.exports = (sequelize) => {
   // Associations
   Order.associate = (models) => {
     Order.belongsTo(models.Lead, { foreignKey: 'leadId', as: 'lead' });
-    Order.hasMany(models.Interaction, { foreignKey: 'orderId', as: 'interactions' });
+    Order.hasOne(models.Interaction, { foreignKey: 'orderId', as: 'interactions' });
   };
 
   return Order;
