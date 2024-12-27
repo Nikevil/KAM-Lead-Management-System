@@ -30,18 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM('active', 'inactive'),
         defaultValue: 'active',
       },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
     },
     {
       tableName: 'users',
-      timestamps: false,
+      timestamps: true,
       hooks: {
         beforeCreate: async (user) => {
           if (user.password) {
