@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Op } = db.Sequelize;
 
 class LeadRepository {
   // Get all leads with optional filters
@@ -48,7 +49,7 @@ class LeadRepository {
       const leads = await db.Lead.findAll({
         where: {
           nextCallDate: {
-            [db.Sequelize.Op.lte]: today,
+            [Op.lte]: today,
           },
         },
       });
@@ -96,34 +97,105 @@ class LeadRepository {
     }
   }
 
+  // Get well-performing accounts
   async getWellPerformingAccounts() {
-    return await db.Lead.findAll({
-      where: {
-        orderCount: {
-          [Op.gte]: 10,
+    const thresholdAmount = parseFloat(process.env.THRESHOLD_AMOUNT) || 500; // Default to 500 if not defined in .env
+    const thresholdDays = parseInt(process.env.THRESHOLD_DAYS) || 30; // Default to 30 days
+    const frequencyThreshold = parseInt(process.env.FREQUENCY_THRESHOLD) || 3; // Default to 3 orders
+    
+    const thresholdDate = new Date(new Date() - thresholdDays * 24 * 60 * 60 * 1000); // Days for performance tracking
+
+    const leads = await db.Lead.findAll({
+      include: [
+        {
+          model: db.Order,
+          attributes: ["id", "orderDate", "amount"],
+          where: {
+            orderDate: {
+              [Op.gte]: thresholdDate, // Orders in the last `thresholdDays` days
+            },
+          },
+          required: true,
         },
-      },
+      ],
+      attributes: ["id", "restaurantName"],
     });
+
+    return leads
+      .map((lead) => {
+        const totalOrderValue = lead.Orders.reduce((sum, order) => sum + order.amount, 0);
+        return {
+          id: lead.id,
+          restaurantName: lead.restaurantName,
+          totalOrderValue,
+          orderCount: lead.Orders.length,
+        };
+      })
+      .filter((lead) => lead.orderCount >= frequencyThreshold && lead.totalOrderValue >= thresholdAmount); // Filter based on frequency and total order value
   }
 
-  async getUnderperformingAccounts() {
-    return await db.Lead.findAll({
-      where: {
-        orderCount: {
-          [Op.lt]: 5,
+  // Get under-performing accounts
+  async getUnderPerformingAccounts() {
+    const thresholdAmount = parseFloat(process.env.THRESHOLD_AMOUNT) || 500; // Threshold amount for underperforming
+    const underPerformingDays = parseInt(process.env.UNDERPERFORMING_DAYS) || 60; // Default to 60 days for underperforming leads
+    const frequencyThreshold = parseInt(process.env.FREQUENCY_THRESHOLD) || 3; // Default to 3 orders
+
+    const thresholdDate = new Date(new Date() - underPerformingDays * 24 * 60 * 60 * 1000); // Orders before `underPerformingDays` days
+
+    const leads = await db.Lead.findAll({
+      include: [
+        {
+          model: db.Order,
+          attributes: ["id", "orderDate", "amount"],
+          where: {
+            orderDate: {
+              [Op.lte]: thresholdDate, // Orders before the last `underPerformingDays` days
+            },
+          },
+          required: false, // Include leads with no orders as well
         },
-      },
+      ],
+      attributes: ["id", "restaurantName"],
     });
+
+    return leads
+      .map((lead) => {
+        const totalOrderValue = lead.Orders.reduce((sum, order) => sum + order.amount, 0);
+        return {
+          id: lead.id,
+          restaurantName: lead.restaurantName,
+          totalOrderValue,
+          orderCount: lead.Orders.length,
+        };
+      })
+      .filter((lead) => lead.orderCount < frequencyThreshold || lead.totalOrderValue < thresholdAmount); // Leads with low frequency or total order value
   }
 
-  async calculateAccountPerformanceMetrics() {
-    const leads = await db.Lead.findAll();
-    leads.forEach(async (lead) => {
-      const daysSinceFirstOrder =
-        (new Date() - new Date(lead.createdAt)) / (1000 * 60 * 60 * 24);
-      lead.performanceMetric = lead.orderCount / daysSinceFirstOrder;
-      await db.Lead.save();
+  // Fetch performance metrics for a specific lead
+  async getLeadPerformanceMetrics(leadId) {
+    const lead = await db.Lead.findByPk(leadId, {
+      include: [
+        {
+          model: db.Order,
+          attributes: ["id", "orderDate", "amount"],
+        },
+      ],
+      attributes: ["id", "restaurantName"],
     });
+
+    if (!lead) {
+      throw new Error("Lead not found");
+    }
+
+    const totalOrderValue = lead.Orders.reduce((sum, order) => sum + order.amount, 0);
+    const orderFrequency = lead.Orders.length;
+
+    return {
+      id: lead.id,
+      restaurantName: lead.restaurantName,
+      totalOrderValue,
+      orderFrequency,
+    };
   }
 }
 

@@ -55,6 +55,7 @@ module.exports = (sequelize) => {
   Lead.associate = (models) => {
     Lead.hasMany(models.LeadContacts, { foreignKey: 'leadId' });
     Lead.hasMany(models.Interaction, { foreignKey: 'leadId' });
+    Lead.hasMany(models.Order, { foreignKey: 'leadId' });
   };
 
   return Lead;

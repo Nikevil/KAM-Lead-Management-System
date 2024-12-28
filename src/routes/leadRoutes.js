@@ -13,6 +13,15 @@ router.get("/", authenticate, authorize(["Admin", "Kam"]), leadController.getLea
 // Get leads requiring calls today
 router.get("/leads-requiring-calls", authenticate, authorize(["Admin", "Kam"]), leadController.getLeadsRequiringCalls);
 
+// Get Well Performing Accounts
+router.get("/well-performing", authenticate, authorize(["Admin", "Kam"]), leadController.getWellPerformingAccounts);
+
+// Get Under Performing Accounts
+router.get("/under-performing", authenticate, authorize(["Admin", "Kam"]), leadController.getUnderPerformingAccounts);
+
+// Get Lead Performance Metrics
+router.get("/performance", authenticate, authorize(["Admin", "Kam"]), leadController.getLeadPerformanceMetrics);
+
 // Get a lead by ID
 router.get("/:id", authenticate, authorize(["Admin", "Kam"]), leadController.getLeadById);
 

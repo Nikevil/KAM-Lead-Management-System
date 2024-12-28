@@ -88,10 +88,10 @@ exports.updateCallFrequency = async (req, res, next) => {
   try {
     const { callFrequency } = req.body;
 
-    if (!leadId || !callFrequency) {
+    if (!callFrequency) {
       return res
         .status(400)
-        .json({ error: "leadId and callFrequency are required" });
+        .json({ error: "callFrequency are required" });
     }
 
     const updatedLead = await leadRepository.updateCallFrequency(
@@ -117,19 +117,20 @@ exports.getWellPerformingAccounts = async (req, res, next) => {
   }
 };
 
-exports.getUnderperformingAccounts = async (req, res, next) => {
+exports.getUnderPerformingAccounts = async (req, res, next) => {
   try {
-    const leads = await leadRepository.getUnderperformingAccounts();
+    const leads = await leadRepository.getUnderPerformingAccounts();
     res.status(200).json(leads);
   } catch (error) {
     next(error);
   }
 };
 
-exports.calculateAccountPerformanceMetrics = async (req, res, next) => {
+exports.getLeadPerformanceMetrics = async (req, res, next) => {
   try {
-    await leadRepository.calculateAccountPerformanceMetrics();
-    res.status(200).json({ message: 'Account performance metrics calculated successfully' });
+    const { id } = req.query;
+    const performanceMetrics = await leadRepository.getLeadPerformanceMetrics(id);
+    res.status(200).json(performanceMetrics);
   } catch (error) {
     next(error);
   }
