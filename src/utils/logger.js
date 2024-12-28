@@ -1,37 +1,108 @@
 const winston = require('winston');
-require('winston-daily-rotate-file');
+const DailyRotateFile = require('winston-daily-rotate-file');
+const path = require('path');
+const fs = require('fs');
 
-// Define the log format
-const logFormat = winston.format.printf(({ timestamp, level, message }) => {
-  return `${timestamp} [${level}]: ${message}`;
-});
+const log_directory = path.join(__dirname, '..', '..', 'logs');
 
-// Create the logger with daily file rotation
+// Ensure the logs directory exists
+try {
+  if (!fs.existsSync(log_directory)) {
+    fs.mkdirSync(log_directory, { recursive: true });
+  }
+} catch (err) {
+  console.error('Failed to create log directory:', err);
+}
+
+// Common format for both console and file
+const commonFormat = winston.format.combine(
+  winston.format.timestamp({
+    format: 'YYYY-MM-DD HH:mm:ss'
+  }),
+  winston.format.printf(({ timestamp, level, message, stack }) => {
+    let output = `${timestamp} ${level.toUpperCase()}: ${message}`;
+    if (stack) {
+      // Preserve original error stack format
+      output += `\n    ${stack}`;
+    }
+    return output;
+  })
+);
+
+// Create the logger
 const logger = winston.createLogger({
-  level: 'info',
+  level: process.env.LOG_LEVEL || 'silly',
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.simple(),
-    logFormat
+    winston.format.errors({ stack: true })
   ),
   transports: [
-    // Console transport
+    // Console transport with colors
     new winston.transports.Console({
       format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
+        winston.format.timestamp({
+          format: 'YYYY-MM-DD HH:mm:ss'
+        }),
+        winston.format.colorize({
+          all: true,
+          colors: {
+            error: 'red',
+            warn: 'yellow',
+            info: 'blue',
+            http: 'white',
+            verbose: 'blue',
+            debug: 'white',
+            silly: 'white'
+          }
+        }),
+        winston.format.printf(({ timestamp, level, message, stack }) => {
+          let output = `${timestamp} ${level}: ${message}`;
+          // Include stack trace in the same string to maintain color
+          if (stack) {
+            output += `\n${stack}`;
+          }
+          return output;
+        })
+      )
     }),
-    // Daily rotated file transport
-    new winston.transports.DailyRotateFile({
-      filename: 'logs/%DATE%-application.log',
+
+    // Single file for all logs
+    new DailyRotateFile({
+      filename: path.join(log_directory, 'combined-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
-      zippedArchive: true, // Compress old logs
-      maxSize: '20m', // Max file size before rotation
-      maxFiles: '30d', // Keep logs for 30 days
-      level: 'info',
-    }),
-  ],
+      maxFiles: '14d',
+      format: commonFormat,
+      level: 'silly'
+    })
+  ]
 });
+
+// Handle uncaught exceptions
+logger.exceptions.handle(
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      winston.format.colorize({
+        all: true
+      }),
+      winston.format.printf(({ timestamp, level, message, stack }) => {
+        // Keep the entire error message including stack in one string
+        let output = `${timestamp} ${level}: ${message}`;
+        if (stack) {
+          output += `\n${stack}`;
+        }
+        return output;
+      })
+    )
+  }),
+  new DailyRotateFile({
+    filename: path.join(log_directory, 'combined-%DATE%.log'),
+    datePattern: 'YYYY-MM-DD',
+    maxFiles: '14d',
+    format: commonFormat
+  })
+);
 
 module.exports = logger;

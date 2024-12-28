@@ -1,4 +1,4 @@
-const leadRepository = require('../repositories/leadRepository');
+const leadRepository = require("../repositories/leadRepository");
 
 exports.getLeads = async (req, res, next) => {
   try {
@@ -12,7 +12,7 @@ exports.getLeads = async (req, res, next) => {
 exports.getLeadById = async (req, res, next) => {
   try {
     const lead = await leadRepository.findLeadById(req.params.id);
-    if (!lead) return res.status(404).json({ message: 'Lead not found' });
+    if (!lead) return res.status(404).json({ message: "Lead not found" });
     res.status(200).json(lead);
   } catch (error) {
     next(error);
@@ -20,7 +20,8 @@ exports.getLeadById = async (req, res, next) => {
 };
 
 exports.addLead = async (req, res, next) => {
-  const { restaurantName, cuisineType, location, leadSource, leadStatus } = req.body;
+  const { restaurantName, cuisineType, location, leadSource, leadStatus } =
+    req.body;
   try {
     await leadRepository.validateLead(restaurantName, location);
     const lead = await leadRepository.createLead({
@@ -30,7 +31,7 @@ exports.addLead = async (req, res, next) => {
       leadSource,
       leadStatus,
     });
-    res.status(201).json({ message: 'Lead added successfully', lead });
+    res.status(201).json({ message: "Lead added successfully", lead });
   } catch (error) {
     next(error);
   }
@@ -38,7 +39,10 @@ exports.addLead = async (req, res, next) => {
 
 exports.updateLead = async (req, res, next) => {
   try {
-    const updatedLead = await leadRepository.updateLead(req.params.id, req.body);
+    const updatedLead = await leadRepository.updateLead(
+      req.params.id,
+      req.body
+    );
     res.status(200).json(updatedLead);
   } catch (error) {
     next(error);
@@ -48,7 +52,7 @@ exports.updateLead = async (req, res, next) => {
 exports.deleteLead = async (req, res, next) => {
   try {
     const lead = await leadRepository.getLeadById(req.params.id);
-    if (!lead) return res.status(404).json({ message: 'Lead not found' });
+    if (!lead) return res.status(404).json({ message: "Lead not found" });
 
     await leadRepository.deleteLead(req.params.id);
     res.status(204).send();
@@ -89,9 +93,7 @@ exports.updateCallFrequency = async (req, res, next) => {
     const { callFrequency } = req.body;
 
     if (!callFrequency) {
-      return res
-        .status(400)
-        .json({ error: "callFrequency are required" });
+      return res.status(400).json({ error: "callFrequency are required" });
     }
 
     const updatedLead = await leadRepository.updateCallFrequency(
@@ -129,28 +131,32 @@ exports.getUnderPerformingAccounts = async (req, res, next) => {
 exports.getLeadPerformanceMetrics = async (req, res, next) => {
   try {
     const { id } = req.query;
-    const performanceMetrics = await leadRepository.getLeadPerformanceMetrics(id);
+    const performanceMetrics = await leadRepository.getLeadPerformanceMetrics(
+      id
+    );
     res.status(200).json(performanceMetrics);
   } catch (error) {
     next(error);
   }
+};
+``
+exports.transferLeads = async (req, res, next) => {
+  try {
+    const { oldUserId, newUserId } = req.body;
 
-  exports.transferLeads = async (req, res, next) => {
-    try {
-      const { oldUserId, newUserId } = req.body;
-  
-      const result = await leadRepository.transferLeads(oldUserId, newUserId);
-  
-      if (result[0] === 0) {
-        return res.status(404).json({ message: 'No leads found for the specified oldUserId.' });
-      }
-  
-      return res.status(200).json({
-        message: `Successfully transferred all leads from user ${oldUserId} to user ${newUserId}.`,
-        updatedLeadsCount: result[0],
-      });
-    } catch (error) {
-      next(error);
+    const result = await leadRepository.transferLeads(oldUserId, newUserId);
+
+    if (result[0] === 0) {
+      return res
+        .status(404)
+        .json({ message: "No leads found for the specified oldUserId." });
     }
+
+    return res.status(200).json({
+      message: `Successfully transferred all leads from user ${oldUserId} to user ${newUserId}.`,
+      updatedLeadsCount: result[0],
+    });
+  } catch (error) {
+    next(error);
   }
 };
