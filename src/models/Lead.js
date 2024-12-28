@@ -40,6 +40,10 @@ module.exports = (sequelize) => {
       type: DataTypes.DATE,
       allowNull: true,
     },
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     tableName: 'leads',
     timestamps: true,
@@ -48,11 +52,15 @@ module.exports = (sequelize) => {
         unique: true,
         fields: ['restaurantName', 'location'], // Composite unique constraint
       },
+      {
+        fields: ['userId'],  // Index on userId for faster lookups and updates
+      },
     ],
   });
 
   // Associations
   Lead.associate = (models) => {
+    Lead.belongsTo(models.User, { foreignKey: 'userId', allowNull: false });
     Lead.hasMany(models.LeadContacts, { foreignKey: 'leadId' });
     Lead.hasMany(models.Interaction, { foreignKey: 'leadId' });
     Lead.hasMany(models.Order, { foreignKey: 'leadId' });

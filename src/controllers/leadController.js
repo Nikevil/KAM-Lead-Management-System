@@ -134,4 +134,23 @@ exports.getLeadPerformanceMetrics = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+
+  exports.transferLeads = async (req, res, next) => {
+    try {
+      const { oldUserId, newUserId } = req.body;
+  
+      const result = await leadRepository.transferLeads(oldUserId, newUserId);
+  
+      if (result[0] === 0) {
+        return res.status(404).json({ message: 'No leads found for the specified oldUserId.' });
+      }
+  
+      return res.status(200).json({
+        message: `Successfully transferred all leads from user ${oldUserId} to user ${newUserId}.`,
+        updatedLeadsCount: result[0],
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 };

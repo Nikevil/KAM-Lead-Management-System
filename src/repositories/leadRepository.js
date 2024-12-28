@@ -197,6 +197,20 @@ class LeadRepository {
       orderFrequency,
     };
   }
+
+  async transferLeads(oldUserId, newUserId) {
+    try {
+      // Update the userId for all leads associated with the oldUserId
+      const result = await db.Lead.update(
+        { userId: newUserId },  // Set the new userId
+        { where: { userId: oldUserId } }  // Filter leads by old userId
+      );
+      
+      return result;  // Returns the result of the update operation
+    } catch (error) {
+      throw new Error('Error transferring leads: ' + error.message);
+    }
+  }
 }
 
 module.exports = new LeadRepository();

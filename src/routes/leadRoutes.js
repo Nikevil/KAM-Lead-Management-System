@@ -4,6 +4,7 @@ const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize");
 
+
 // Add a new lead
 router.post("/", authenticate, authorize(["Admin", "Kam"]), leadController.addLead);
 
@@ -21,6 +22,9 @@ router.get("/under-performing", authenticate, authorize(["Admin", "Kam"]), leadC
 
 // Get Lead Performance Metrics
 router.get("/performance", authenticate, authorize(["Admin", "Kam"]), leadController.getLeadPerformanceMetrics);
+
+// Transfer Leads
+router.put('/transfer-leads', authenticate, authorize(["Admin"]), leadController.transferLeads);
 
 // Get a lead by ID
 router.get("/:id", authenticate, authorize(["Admin", "Kam"]), leadController.getLeadById);

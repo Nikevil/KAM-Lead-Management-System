@@ -4,6 +4,7 @@ const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
 const router = express.Router();
 
+
 // Route to create a new order (requires authentication and authorization)
 router.post('/', authenticate, authorize(['Admin', 'Kam']), orderController.createOrder);
 

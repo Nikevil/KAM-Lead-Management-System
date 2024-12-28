@@ -4,7 +4,6 @@ const roleController = require('../controllers/roleController');
 const authenticate = require('../middlewares/authenticate');
 
 
-
 // Get role by ID
 router.get('/:id', authenticate, roleController.getRoleById);
 
