@@ -144,3 +144,32 @@ exports.deleteOrder = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get ordering patterns based on product categories
+exports.getOrderingPatterns = async (req, res, next) => {
+  try {
+    const { leadId, startDate, endDate, limit, offset } = req.query;
+
+    // Fetch ordering patterns from the repository
+    const patterns = await orderRepository.getOrderingPatterns({
+      leadId,
+      startDate,
+      endDate,
+      limit: limit ? parseInt(limit, 10) : undefined,
+      offset: offset ? parseInt(offset, 10) : undefined,
+    });
+
+    if (!patterns || patterns.length === 0) {
+      return res.status(404).json({
+        error: "No ordering patterns found.",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: patterns,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

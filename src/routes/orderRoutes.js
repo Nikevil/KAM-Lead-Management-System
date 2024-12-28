@@ -10,6 +10,9 @@ router.post('/', authenticate, authorize(['Admin', 'Kam']), orderController.crea
 // Route to get filtered orders (e.g., by date range or product category)
 router.get('/filtered', authenticate,  orderController.getFilteredOrders);
 
+// Route to get ordering patterns
+router.get("/ordering-patterns", authenticate, authorize(['Admin', 'Kam']), orderController.getOrderingPatterns);
+
 // Route to get all orders for a specific lead (requires authentication and authorization)
 router.get('/lead/:leadId', authenticate, orderController.getOrdersByLeadId);
 

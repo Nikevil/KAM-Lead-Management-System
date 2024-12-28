@@ -93,6 +93,67 @@ class OrderRepository {
       throw new Error("Error fetching filtered orders: " + error.message);
     }
   }
+
+  async getOrderingPatterns({ leadId, startDate, endDate, limit, offset }) {
+    try {
+      const whereClause = {
+        orderDate: {
+          [Op.between]: [
+            startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            endDate ? new Date(endDate) : new Date(),
+          ],
+        },
+        status: "completed", // Include only completed orders
+      };
+
+      if (leadId) {
+        whereClause.leadId = leadId; // Filter by leadId if provided
+      }
+
+      // Query to calculate ordering patterns
+      const patterns = await db.Order.findAll({
+        attributes: [
+          "leadId",
+          [db.Sequelize.fn("unnest", db.Sequelize.col("productCategories")), "category"],
+          [db.Sequelize.fn("COUNT", db.Sequelize.col("Order.id")), "totalOrders"],
+          [db.Sequelize.fn("SUM", db.Sequelize.col("amount")), "totalAmountSpent"],
+          [
+            db.Sequelize.fn(
+              "AVG",
+              db.Sequelize.literal(`DATE_PART('day', NOW() - "orderDate")`)
+            ),
+            "averageDaysBetweenOrders",
+          ],
+        ],
+        where: whereClause,
+        group: ["leadId", "category", "lead.id", "lead.restaurantName", "lead.location"],
+        include: [
+          {
+            model: db.Lead,
+            as: "lead",
+            attributes: ["id", "restaurantName", "location"],
+          },
+        ],
+        limit,
+        offset,
+        raw: true,
+      });
+
+      return patterns.map((result) => ({
+        leadId: result.leadId,
+        restaurantName: result["lead.restaurantName"],
+        location: result["lead.location"],
+        category: result.category,
+        totalOrders: parseInt(result.totalOrders, 10),
+        totalAmountSpent: parseFloat(result.totalAmountSpent).toFixed(2),
+        averageDaysBetweenOrders: parseFloat(result.averageDaysBetweenOrders).toFixed(2),
+      }));
+    } catch (error) {
+      throw new Error("Error fetching ordering patterns: " + error.message);
+    }
+  }
+
+  
 }
 
 module.exports = new OrderRepository();

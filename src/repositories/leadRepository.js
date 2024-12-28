@@ -31,7 +31,7 @@ class LeadRepository {
   async updateLead(id, leadData) {
     const lead = await db.Lead.findByPk(id);
     if (!lead) throw new Error("Lead not found");
-    return db.Lead.update(leadData);
+    return await lead.update(leadData);
   }
 
   // Delete a lead
