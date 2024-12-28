@@ -50,6 +50,12 @@ module.exports = (sequelize) => {
   }, {
     tableName: 'interactions',
     timestamps: true,
+    indexes: [
+      { fields: ['leadId'] },
+      { fields: ['userId'] },
+      { fields: ['contactId'] },
+      { fields: ['interactionDate'] },
+    ],    
   });
 
   // Associations

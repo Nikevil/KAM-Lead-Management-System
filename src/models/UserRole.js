@@ -16,13 +16,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive'), // ENUM for better validation
-        defaultValue: 'active', // Default status is 'active'
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active',
       },
     },
     {
       tableName: 'user_roles',
-      timestamps: true, // Set to true if you want Sequelize to manage timestamps
+      timestamps: true,
+      indexes: [
+        { fields: ['userId', 'roleId'], unique: true },
+        { fields: ['status'] },
+      ],      
     }
   );
 

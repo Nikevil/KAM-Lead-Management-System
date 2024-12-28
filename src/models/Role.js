@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: 'roles', // Specify the actual table name
       timestamps: true, // Disable automatic timestamps (createdAt/updatedAt)
+      indexes: [
+        { fields: ['name'], unique: true },
+        { fields: ['status'] },
+      ],      
     }
   );
 

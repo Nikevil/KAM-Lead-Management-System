@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
   {
     tableName: 'lead_contacts',
     timestamps: true,
+    indexes: [
+      { fields: ['leadId', 'contactId'], unique: true },
+      { fields: ['status'] },
+    ],
   });
 
   return LeadContacts;

@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     tableName: 'contacts',
     timestamps: true, // Adds createdAt and updatedAt
+    indexes: [
+      { fields: ['email'], unique: true },
+      { fields: ['phone'] },
+    ],
   });
 
   // Associations

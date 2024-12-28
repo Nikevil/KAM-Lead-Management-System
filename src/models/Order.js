@@ -49,6 +49,11 @@ module.exports = (sequelize) => {
   }, {
     tableName: 'orders',
     timestamps: true,
+    indexes: [
+      { fields: ['leadId'] },
+      { fields: ['orderDate'] },
+      { fields: ['status'] },
+    ],
   });
 
   // Associations
