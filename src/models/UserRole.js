@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const UserRole = sequelize.define(
-    'UserRole',
+    "UserRole",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -16,24 +16,30 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive'),
-        defaultValue: 'active',
+        type: DataTypes.ENUM("active", "inactive"),
+        defaultValue: "active",
       },
     },
     {
-      tableName: 'user_roles',
+      tableName: "user_roles",
       timestamps: true,
       indexes: [
-        { fields: ['userId', 'roleId'], unique: true },
-        { fields: ['status'] },
-      ],      
+        { fields: ["userId", "roleId"], unique: true },
+        { fields: ["status"] },
+      ],
     }
   );
 
   // Associations
   UserRole.associate = (models) => {
-    UserRole.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE' });
-    UserRole.belongsTo(models.Role, { foreignKey: 'roleId', onDelete: 'CASCADE' });
+    UserRole.belongsTo(models.User, {
+      foreignKey: "userId",
+      onDelete: "CASCADE",
+    });
+    UserRole.belongsTo(models.Role, {
+      foreignKey: "roleId",
+      onDelete: "CASCADE",
+    });
   };
 
   return UserRole;

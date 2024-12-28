@@ -21,7 +21,6 @@ exports.addUser = async (req, res, next) => {
       if (validRoles.length !== roles.length) {
         return res.status(400).json({ message: "Invalid roles provided" });
       }
-
     }
 
     // Create the user

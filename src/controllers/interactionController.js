@@ -1,22 +1,17 @@
-const interactionRepository = require('../repositories/interactionRepository');
+const interactionRepository = require("../repositories/interactionRepository");
 
 // Create a new interaction
-exports.createInteraction = async (req, res, next) => {
+exports.addInteraction = async (req, res, next) => {
   try {
-    const { leadId, interactionType, interactionDate, notes, contactId, duration, outcome, orderId } = req.body;
+    const interactionData = req.body;
     const userId = req.user.id;
     const newInteraction = await interactionRepository.createInteraction({
-      leadId,
+      ...interactionData,
       userId,
-      interactionType,
-      interactionDate,
-      notes,
-      contactId,
-      duration,
-      outcome,
-      orderId,
     });
-    res.status(201).json({ message: 'Interaction created', interaction: newInteraction });
+    res
+      .status(201)
+      .json({ message: "Interaction created", interaction: newInteraction });
   } catch (error) {
     next(error);
   }
@@ -28,7 +23,7 @@ exports.getInteractionById = async (req, res, next) => {
     const { id } = req.params;
     const interaction = await interactionRepository.getInteractionById(id);
     if (!interaction) {
-      return res.status(404).json({ error: 'Interaction not found' });
+      return res.status(404).json({ error: "Interaction not found" });
     }
     res.status(200).json(interaction);
   } catch (error) {
@@ -40,7 +35,9 @@ exports.getInteractionById = async (req, res, next) => {
 exports.getInteractionsByLeadId = async (req, res, next) => {
   try {
     const { leadId } = req.params;
-    const interactions = await interactionRepository.getInteractionsByLeadId(leadId);
+    const interactions = await interactionRepository.getInteractionsByLeadId(
+      leadId
+    );
     res.status(200).json(interactions);
   } catch (error) {
     next(error);
@@ -52,11 +49,19 @@ exports.updateInteraction = async (req, res, next) => {
   try {
     const { id } = req.params;
     const interactionData = req.body;
-    const updatedInteraction = await interactionRepository.updateInteraction(id, interactionData);
+    const updatedInteraction = await interactionRepository.updateInteraction(
+      id,
+      interactionData
+    );
     if (!updatedInteraction) {
-      return res.status(404).json({ error: 'Interaction not found' });
+      return res.status(404).json({ error: "Interaction not found" });
     }
-    res.status(200).json({ message: 'Interaction updated', interaction: updatedInteraction });
+    res
+      .status(200)
+      .json({
+        message: "Interaction updated",
+        interaction: updatedInteraction,
+      });
   } catch (error) {
     next(error);
   }
@@ -66,9 +71,11 @@ exports.updateInteraction = async (req, res, next) => {
 exports.deleteInteraction = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const deletedInteraction = await interactionRepository.deleteInteraction(id);
+    const deletedInteraction = await interactionRepository.deleteInteraction(
+      id
+    );
     if (!deletedInteraction) {
-      return res.status(404).json({ error: 'Interaction not found' });
+      return res.status(404).json({ error: "Interaction not found" });
     }
     res.status(200).json(deletedInteraction);
   } catch (error) {

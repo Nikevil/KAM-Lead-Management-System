@@ -3,26 +3,12 @@ const orderRepository = require("../repositories/orderRepository");
 // Create a new order
 exports.createOrder = async (req, res, next) => {
   try {
-    const {
-      leadId,
-      amount,
-      productCategories,
-      orderDate,
-      status,
-      notes,
-      orderDetails,
-    } = req.body;
+    const orderData = req.body;
     const userId = req.user.id;
 
     const newOrder = await orderRepository.createOrder({
-      leadId,
+      ...orderData,
       userId,
-      orderDetails,
-      productCategories,
-      orderDate,
-      status,
-      notes,
-      amount,
     });
 
     res.status(201).json({

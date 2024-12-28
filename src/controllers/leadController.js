@@ -1,5 +1,6 @@
 const leadRepository = require("../repositories/leadRepository");
 
+// get all leads
 exports.getLeads = async (req, res, next) => {
   try {
     const leads = await leadRepository.getAllLeads();
@@ -9,6 +10,7 @@ exports.getLeads = async (req, res, next) => {
   }
 };
 
+// get lead by id
 exports.getLeadById = async (req, res, next) => {
   try {
     const lead = await leadRepository.findLeadById(req.params.id);
@@ -19,6 +21,7 @@ exports.getLeadById = async (req, res, next) => {
   }
 };
 
+// add a new lead
 exports.addLead = async (req, res, next) => {
   const { restaurantName, cuisineType, location, leadSource, leadStatus } =
     req.body;
@@ -37,6 +40,7 @@ exports.addLead = async (req, res, next) => {
   }
 };
 
+// update a lead
 exports.updateLead = async (req, res, next) => {
   try {
     const updatedLead = await leadRepository.updateLead(
@@ -49,6 +53,7 @@ exports.updateLead = async (req, res, next) => {
   }
 };
 
+// delete a lead
 exports.deleteLead = async (req, res, next) => {
   try {
     const lead = await leadRepository.getLeadById(req.params.id);
@@ -61,6 +66,7 @@ exports.deleteLead = async (req, res, next) => {
   }
 };
 
+// get leads requiring calls
 exports.getLeadsRequiringCalls = async (req, res, next) => {
   try {
     const leads = await leadRepository.getLeadsRequiringCalls();
@@ -75,6 +81,7 @@ exports.getLeadsRequiringCalls = async (req, res, next) => {
   }
 };
 
+// record a call
 exports.recordCall = async (req, res, next) => {
   try {
     const updatedLead = await leadRepository.recordCall(req.params.leadId);
@@ -88,6 +95,7 @@ exports.recordCall = async (req, res, next) => {
   }
 };
 
+// update call frequency
 exports.updateCallFrequency = async (req, res, next) => {
   try {
     const { callFrequency } = req.body;
@@ -110,6 +118,7 @@ exports.updateCallFrequency = async (req, res, next) => {
   }
 };
 
+// get well performing accounts
 exports.getWellPerformingAccounts = async (req, res, next) => {
   try {
     const leads = await leadRepository.getWellPerformingAccounts();
@@ -119,6 +128,7 @@ exports.getWellPerformingAccounts = async (req, res, next) => {
   }
 };
 
+// get under performing accounts
 exports.getUnderPerformingAccounts = async (req, res, next) => {
   try {
     const leads = await leadRepository.getUnderPerformingAccounts();
@@ -128,6 +138,7 @@ exports.getUnderPerformingAccounts = async (req, res, next) => {
   }
 };
 
+// get lead performance metrics
 exports.getLeadPerformanceMetrics = async (req, res, next) => {
   try {
     const { id } = req.query;
@@ -139,7 +150,8 @@ exports.getLeadPerformanceMetrics = async (req, res, next) => {
     next(error);
   }
 };
-``
+
+// transfer leads
 exports.transferLeads = async (req, res, next) => {
   try {
     const { oldUserId, newUserId } = req.body;

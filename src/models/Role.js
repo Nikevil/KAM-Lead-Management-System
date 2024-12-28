@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Role = sequelize.define(
-    'Role',
+    "Role",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,17 +13,14 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive'), // Use ENUM type for better validation
-        defaultValue: 'active', // Default status is 'active'
+        type: DataTypes.ENUM("active", "inactive"),
+        defaultValue: "active",
       },
     },
     {
-      tableName: 'roles', // Specify the actual table name
-      timestamps: true, // Disable automatic timestamps (createdAt/updatedAt)
-      indexes: [
-        { fields: ['name'], unique: true },
-        { fields: ['status'] },
-      ],      
+      tableName: "roles",
+      timestamps: true,
+      indexes: [{ fields: ["name"], unique: true }, { fields: ["status"] }],
     }
   );
 
@@ -31,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   Role.associate = (models) => {
     Role.belongsToMany(models.User, {
       through: models.UserRole,
-      foreignKey: 'roleId',
-      otherKey: 'userId',
+      foreignKey: "roleId",
+      otherKey: "userId",
     });
   };
 

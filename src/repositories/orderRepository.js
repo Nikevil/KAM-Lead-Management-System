@@ -16,7 +16,7 @@ class OrderRepository {
   async getOrderById(id) {
     try {
       const order = await db.Order.findByPk(id, {
-        include: ["lead"], // You can include related models if needed
+        include: ["lead"],
       });
       return order;
     } catch (error) {
@@ -29,7 +29,7 @@ class OrderRepository {
     try {
       const orders = await db.Order.findAll({
         where: { leadId },
-        include: ["lead"], // You can include related models if needed
+        include: ["lead"],
       });
       return orders;
     } catch (error) {
@@ -86,7 +86,7 @@ class OrderRepository {
 
       const orders = await db.Order.findAll({
         where: whereClause,
-        include: ["lead"], // You can include related models if needed
+        include: ["lead"],
       });
       return orders;
     } catch (error) {
@@ -99,24 +99,35 @@ class OrderRepository {
       const whereClause = {
         orderDate: {
           [Op.between]: [
-            startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            startDate
+              ? new Date(startDate)
+              : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
             endDate ? new Date(endDate) : new Date(),
           ],
         },
-        status: "completed", // Include only completed orders
+        status: "completed",
       };
 
       if (leadId) {
-        whereClause.leadId = leadId; // Filter by leadId if provided
+        whereClause.leadId = leadId;
       }
 
       // Query to calculate ordering patterns
       const patterns = await db.Order.findAll({
         attributes: [
           "leadId",
-          [db.Sequelize.fn("unnest", db.Sequelize.col("productCategories")), "category"],
-          [db.Sequelize.fn("COUNT", db.Sequelize.col("Order.id")), "totalOrders"],
-          [db.Sequelize.fn("SUM", db.Sequelize.col("amount")), "totalAmountSpent"],
+          [
+            db.Sequelize.fn("unnest", db.Sequelize.col("productCategories")),
+            "category",
+          ],
+          [
+            db.Sequelize.fn("COUNT", db.Sequelize.col("Order.id")),
+            "totalOrders",
+          ],
+          [
+            db.Sequelize.fn("SUM", db.Sequelize.col("amount")),
+            "totalAmountSpent",
+          ],
           [
             db.Sequelize.fn(
               "AVG",
@@ -126,7 +137,13 @@ class OrderRepository {
           ],
         ],
         where: whereClause,
-        group: ["leadId", "category", "lead.id", "lead.restaurantName", "lead.location"],
+        group: [
+          "leadId",
+          "category",
+          "lead.id",
+          "lead.restaurantName",
+          "lead.location",
+        ],
         include: [
           {
             model: db.Lead,
@@ -146,14 +163,14 @@ class OrderRepository {
         category: result.category,
         totalOrders: parseInt(result.totalOrders, 10),
         totalAmountSpent: parseFloat(result.totalAmountSpent).toFixed(2),
-        averageDaysBetweenOrders: parseFloat(result.averageDaysBetweenOrders).toFixed(2),
+        averageDaysBetweenOrders: parseFloat(
+          result.averageDaysBetweenOrders
+        ).toFixed(2),
       }));
     } catch (error) {
       throw new Error("Error fetching ordering patterns: " + error.message);
     }
   }
-
-  
 }
 
 module.exports = new OrderRepository();

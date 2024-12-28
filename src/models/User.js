@@ -1,8 +1,8 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'User',
+    "User",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -36,18 +36,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'inactive'),
-        defaultValue: 'active',
+        type: DataTypes.ENUM("active", "inactive"),
+        defaultValue: "active",
       },
     },
     {
-      tableName: 'users',
+      tableName: "users",
       timestamps: true,
       indexes: [
-        { fields: ['username'], unique: true },
-        { fields: ['email'], unique: true },
-        { fields: ['phone'], unique: true },
-      ],      
+        { fields: ["username"], unique: true },
+        { fields: ["email"], unique: true },
+        { fields: ["phone"], unique: true },
+      ],
       hooks: {
         beforeCreate: async (user) => {
           if (user.password) {
@@ -67,8 +67,11 @@ module.exports = (sequelize, DataTypes) => {
 
   // Associations
   User.associate = (models) => {
-    User.hasMany(models.Interaction, { foreignKey: 'userId' });
-    User.belongsToMany(models.Role, { through: models.UserRole, foreignKey: 'userId' });
+    User.hasMany(models.Interaction, { foreignKey: "userId" });
+    User.belongsToMany(models.Role, {
+      through: models.UserRole,
+      foreignKey: "userId",
+    });
   };
 
   return User;

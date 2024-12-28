@@ -1,6 +1,7 @@
 const db = require('../models');
 
 class RoleRepository {
+
   // Get all roles with optional filters
   async getAllRoles(filters = {}) {
     return db.Role.findAll({ where: filters });

@@ -1,4 +1,4 @@
-const contactRepository = require("../repositories/contactRepository"); // Import the repository
+const contactRepository = require("../repositories/contactRepository");
 
 // Create a new contact
 exports.addContact = async (req, res, next) => {
@@ -90,7 +90,7 @@ exports.deleteContact = async (req, res, next) => {
     if (!deletedContact) {
       return res.status(404).json({ message: "Contact not found" });
     }
-    res.status(204).send(); // No content after deletion
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

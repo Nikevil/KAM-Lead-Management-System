@@ -1,10 +1,13 @@
 const db = require('../models');
 
 class UserRepository {
+  
+  // create a new user
   async createUser(name, username, password, email, status = 'active', phone) {
     return await db.User.create({ name, username, password, email, status, phone });
   }
 
+  // get all users
   async getAllUsers() {
     return db.User.findAll(
       {
@@ -17,6 +20,7 @@ class UserRepository {
     });
   }
 
+  // validate user
   async validateUser(whereCondition) {
     const user = await db.User.findOne({ where: whereCondition });
     if (user) {
@@ -24,6 +28,7 @@ class UserRepository {
     }
   }
 
+  // find user by id
   async findUserById(id) {
     return db.User.findByPk(id, {
       attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt'],
@@ -35,6 +40,7 @@ class UserRepository {
     });
   }
 
+  // find user by username
   async findUserByUsername(username, status = 'active') {
     return await db.User.findOne({
       where: { username, status },
@@ -45,6 +51,7 @@ class UserRepository {
     });
   }
   
+  // update user
   async updateUser({ name, username, email, phone, status, roles }, id) {
     const user = await db.User.findByPk(id);
     if (!user) {
@@ -69,6 +76,7 @@ class UserRepository {
     return user;
   }
 
+  // add user roles
   async addUserRoles(userRoles) {
     return await db.UserRole.bulkCreate(userRoles);
   }
