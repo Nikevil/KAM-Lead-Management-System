@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const sequelize = require('../config/database');
+const logger = require('../utils/logger');
 const basename = path.basename(__filename);
 const db = {};
 
@@ -23,11 +24,11 @@ Object.keys(db).forEach(modelName => {
 (async () => {
   try {
     const syncOptions = { alter: true }; // Adjust options: alter = modify, force = recreate
-    console.log('Synchronizing database schema...');
+    logger.info('Synchronizing database schema...');
     await sequelize.sync(syncOptions); // Sync all models with the database
-    console.log('Database schema synchronized successfully.');
+    logger.info('Database schema synchronized successfully.');
   } catch (error) {
-    console.error('Error synchronizing database schema:', error);
+    logger.error('Error synchronizing database schema:', error);
     process.exit(1); // Exit process on failure
   }
 })();
