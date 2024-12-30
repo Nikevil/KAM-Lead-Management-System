@@ -120,10 +120,7 @@ exports.deleteOrder = async (req, res, next) => {
       });
     }
 
-    res.status(200).json({
-      message: "Order deleted successfully",
-      order: deletedOrder,
-    });
+    res.status(200).json();
   } catch (error) {
     next(error);
   }

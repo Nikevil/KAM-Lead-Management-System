@@ -70,8 +70,7 @@ class ContactRepository {
       if (!contact) {
         return null;
       }
-      await contact.destroy(); // Delete the contact from the database
-      return contact;
+      return await contact.destroy(); // Delete the contact from the database
     } catch (error) {
       throw new Error("Error deleting contact: " + error.message);
     }

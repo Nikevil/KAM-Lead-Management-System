@@ -37,7 +37,9 @@ class LeadRepository {
   // Delete a lead
   async deleteLead(id) {
     const lead = await db.Lead.findByPk(id);
-    if (!lead) throw new Error("Lead not found");
+    if (!lead) {
+      return null;
+    }
     return db.Lead.destroy();
   }
 

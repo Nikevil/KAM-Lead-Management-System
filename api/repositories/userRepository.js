@@ -80,6 +80,19 @@ class UserRepository {
   async addUserRoles(userRoles) {
     return await db.UserRole.bulkCreate(userRoles);
   }
+
+  // Delete User by its ID
+    async deleteUser(id) {
+      try {
+        const user = await db.User.findByPk(id);
+        if (!user) {
+          return null;
+        }
+        return await user.destroy(); // Delete the order from the database
+      } catch (error) {
+        throw new Error("Error deleting order: " + error.message);
+      }
+    }
 }
 
 module.exports = new UserRepository();

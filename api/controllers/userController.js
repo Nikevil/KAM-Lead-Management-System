@@ -25,17 +25,25 @@ exports.addUser = async (req, res, next) => {
     }
 
     // Create the user
-    const user = await userRepository.createUser({
-      name,
-      username,
-      password,
-      email,
-      status,
-      phone,
-    }, userId);
+    const user = await userRepository.createUser(
+      {
+        name,
+        username,
+        password,
+        email,
+        status,
+        phone,
+      },
+      userId
+    );
 
     // Map roles to the user by creating entries in UserRole
-    const userRoles = roles.map((roleId) => ({ userId: user.id, roleId, createdBy: userId, updatedBy: userId }));
+    const userRoles = roles.map((roleId) => ({
+      userId: user.id,
+      roleId,
+      createdBy: userId,
+      updatedBy: userId,
+    }));
 
     if (roles && roles.length > 0) {
       await userRepository.addUserRoles(userRoles);
@@ -106,7 +114,11 @@ exports.updateUser = async (req, res, next) => {
 
     // Map roles to the user by creating entries in UserRole if roles are provided
     if (roles && roles.length > 0) {
-      const userRoles = roles.map((roleId) => ({ userId: user.id, roleId, updatedBy: userId }));
+      const userRoles = roles.map((roleId) => ({
+        userId: user.id,
+        roleId,
+        updatedBy: userId,
+      }));
       await userRepository.addUserRoles(userRoles);
     }
 
@@ -118,10 +130,9 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    const user = await userRepository.findUserById(req.params.id);
+    const { id } = req.params;
+    const user = await userRepository.deleteUser(id);
     if (!user) return res.status(404).json({ message: "User not found" });
-
-    await user.destroy();
     res.status(204).json();
   } catch (error) {
     next(error);

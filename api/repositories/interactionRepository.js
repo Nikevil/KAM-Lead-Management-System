@@ -59,10 +59,9 @@ class InteractionRepository {
     try {
       const interaction = await db.Interaction.findByPk(id);
       if (!interaction) {
-        throw new Error("Interaction not found");
+        return null;
       }
-      await interaction.destroy(); // Delete the interaction from the database
-      return interaction;
+      return await interaction.destroy(); // Delete the interaction from the database
     } catch (error) {
       throw new Error("Error deleting interaction: " + error.message);
     }

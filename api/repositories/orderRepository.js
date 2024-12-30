@@ -63,8 +63,7 @@ class OrderRepository {
       if (!order) {
         return null;
       }
-      await order.destroy(); // Delete the order from the database
-      return order;
+      return await order.destroy(); // Delete the order from the database
     } catch (error) {
       throw new Error("Error deleting order: " + error.message);
     }
