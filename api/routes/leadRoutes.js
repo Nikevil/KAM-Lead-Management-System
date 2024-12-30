@@ -11,7 +11,6 @@ const {
   updateCallFrequencyValidationSchema,
   recordCallValidationSchema,
   transferLeadsValidationSchema,
-  getLeadPerformanceMetricsValidationSchema,
   validateIdSchema,
   validateLeadIdSchema,
 } = require("../validations/leadValidation");
