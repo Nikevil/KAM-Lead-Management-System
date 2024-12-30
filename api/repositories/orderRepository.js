@@ -3,9 +3,13 @@ const db = require("../models");
 
 class OrderRepository {
   // Create a new order
-  async createOrder(leadData, userId) {
+  async createOrder(orderData, userId) {
     try {
-      const newOrder = await db.Order.create({...leadData, createdBy: userId, updatedBy: userId});
+      const newOrder = await db.Order.create({
+        ...orderData,
+        createdBy: userId,
+        updatedBy: userId,
+      });
       return newOrder;
     } catch (error) {
       throw new Error("Error creating order: " + error.message);
@@ -46,8 +50,7 @@ class OrderRepository {
       }
 
       // Update the order details
-      await order.update({orderData, updatedBy: userId});
-      return order;
+      return await order.update({ ...orderData, updatedBy: userId });
     } catch (error) {
       throw new Error("Error updating order: " + error.message);
     }

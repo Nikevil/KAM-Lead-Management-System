@@ -71,10 +71,6 @@ module.exports = (sequelize) => {
   // Associations
   Order.associate = (models) => {
     Order.belongsTo(models.Lead, { foreignKey: "leadId", as: "lead" });
-    Order.hasOne(models.Interaction, {
-      foreignKey: "orderId",
-      as: "interactions",
-    });
   };
 
   return Order;

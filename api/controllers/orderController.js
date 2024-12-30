@@ -6,10 +6,7 @@ exports.createOrder = async (req, res, next) => {
     const orderData = req.body;
     const userId = req.user.id;
 
-    const newOrder = await orderRepository.createOrder({
-      ...orderData,
-      userId,
-    });
+    const newOrder = await orderRepository.createOrder(orderData, userId);
 
     res.status(201).json({
       message: "Order created successfully",
