@@ -1,15 +1,15 @@
 const express = require("express");
-const interactionController = require("../controllers/interactionController");
+const interactionController = require("../controllers/interactionController.js");
 const router = express.Router();
-const authenticate = require("../middlewares/authenticate");
+const authenticate = require("../middlewares/authenticate.js");
 const authorize = require("../middlewares/authorize.js");
-const validate = require("../middlewares/validationMiddleware");
+const validate = require("../middlewares/validationMiddleware.js");
 const {
   createInteractionValidationSchema,
   updateInteractionValidationSchema,
   validateIdSchema,
   validateLeadIdSchema,
-} = require("../validations/interactionValidation");
+} = require("../validations/interactionValidation.js");
 
 // Route to create a new interaction (requires authentication and authorization)
 router.post(

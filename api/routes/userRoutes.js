@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController");
-const authenticate = require("../middlewares/authenticate");
+const userController = require("../controllers/userController.js");
+const authenticate = require("../middlewares/authenticate.js");
 const authorize = require("../middlewares/authorize.js");
-const validate = require("../middlewares/validationMiddleware");
+const validate = require("../middlewares/validationMiddleware.js");
 const {
   addUserValidationSchema,
   updateUserValidationSchema,
   userIdValidationSchema,
-} = require("../validations/userValidation");
+} = require("../validations/userValidation.js");
 
 // Route to create a new user (requires authentication and authorization)
 router.post(
