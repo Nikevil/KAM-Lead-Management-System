@@ -88,7 +88,7 @@ class UserRepository {
       if (!user) {
         return null;
       }
-      return await user.destroy(); // Delete the order from the database
+      return await user.destroy(); // Delete the user from the database
     } catch (error) {
       throw new Error('Error deleting order: ' + error.message);
     }

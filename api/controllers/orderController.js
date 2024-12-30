@@ -136,8 +136,8 @@ exports.getOrderingPatterns = async (req, res, next) => {
       leadId,
       startDate,
       endDate,
-      limit: limit ? parseInt(limit, 10) : undefined,
-      offset: offset ? parseInt(offset, 10) : undefined,
+      limit: limit,
+      offset: offset,
     });
 
     if (!patterns || patterns.length === 0) {

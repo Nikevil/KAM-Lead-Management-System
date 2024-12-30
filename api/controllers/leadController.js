@@ -61,11 +61,10 @@ exports.updateLead = async (req, res, next) => {
 // delete a lead
 exports.deleteLead = async (req, res, next) => {
   try {
-    const lead = await leadRepository.getLeadById(req.params.id);
+    const { id } = req.params;
+    const lead = await leadRepository.deleteLead(id);
     if (!lead) return res.status(404).json({ message: 'Lead not found' });
-
-    await leadRepository.deleteLead(req.params.id);
-    res.status(204).send();
+    res.status(204).json();
   } catch (error) {
     next(error);
   }

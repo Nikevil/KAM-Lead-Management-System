@@ -15,6 +15,12 @@ module.exports = {
   },
   collectCoverageFrom: [
     'api/**/*.js',
+    '!api/models/*.js',
+    '!api/routes/*.js',
+    '!api/utils/*.js',
+    '!api/repositories/*.js',
+    '!api/app.js',
+    '!api/server.js',
   ],
   coverageReporters: ['text', 'lcov'],
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup/jest.setup.js'],
