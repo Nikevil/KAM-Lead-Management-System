@@ -1,9 +1,21 @@
-// File: src/middlewares/validationMiddleware.js
-const validationMiddleware = (schema) => (req, res, next) => {
-  const { error } = schema.validate(req.body);
+const validationMiddleware = (schemas) => (req, res, next) => {
+  // Validate each part of the request if the corresponding schema is provided
+  const validations = Object.keys(schemas).map((key) => {
+    if (schemas[key]) {
+      const { error } = schemas[key].validate(req[key]);
+      if (error) {
+        return { key, message: error.details[0].message };
+      }
+    }
+    return null;
+  });
+
+  // Check for validation errors
+  const error = validations.find((result) => result !== null);
   if (error) {
-    return res.status(400).json({ message: error.details[0].message });
+    return res.status(400).json({ message: `Invalid ${error.key}: ${error.message}` });
   }
+
   next();
 };
 

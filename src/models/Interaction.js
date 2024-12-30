@@ -49,6 +49,14 @@ module.exports = (sequelize) => {
           key: "id",
         },
       },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      }
     },
     {
       tableName: "interactions",

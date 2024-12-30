@@ -2,9 +2,10 @@ const db = require("../models");
 
 class InteractionRepository {
   // Create a new interaction
-  async createInteraction(interactionData) {
+  async createInteraction(interactionData, userId) {
     try {
-      const newInteraction = await db.Interaction.create(interactionData);
+      const newInteraction = await db.Interaction.create({...interactionData
+        , createdBy: userId, updatedBy: userId});
       return newInteraction;
     } catch (error) {
       throw new Error("Error creating interaction: " + error.message);
@@ -40,13 +41,13 @@ class InteractionRepository {
   }
 
   // Update an interaction by its ID
-  async updateInteraction(id, interactionData) {
+  async updateInteraction(id, interactionData, userId) {
     try {
       const interaction = await db.Interaction.findByPk(id);
       if (!interaction) {
         throw new Error("Interaction not found");
       }
-      await interaction.update(interactionData);
+      await interaction.update({...interactionData, updatedBy: userId});
       return interaction;
     } catch (error) {
       throw new Error("Error updating interaction: " + error.message);

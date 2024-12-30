@@ -3,9 +3,9 @@ const db = require("../models");
 
 class OrderRepository {
   // Create a new order
-  async createOrder(leadData) {
+  async createOrder(leadData, userId) {
     try {
-      const newOrder = await db.Order.create(leadData);
+      const newOrder = await db.Order.create({...leadData, createdBy: userId, updatedBy: userId});
       return newOrder;
     } catch (error) {
       throw new Error("Error creating order: " + error.message);
@@ -38,7 +38,7 @@ class OrderRepository {
   }
 
   // Update an order by its ID
-  async updateOrder(id, orderData) {
+  async updateOrder(id, orderData, userId) {
     try {
       const order = await db.Order.findByPk(id);
       if (!order) {
@@ -46,7 +46,7 @@ class OrderRepository {
       }
 
       // Update the order details
-      await order.update(orderData);
+      await order.update({orderData, updatedBy: userId});
       return order;
     } catch (error) {
       throw new Error("Error updating order: " + error.message);

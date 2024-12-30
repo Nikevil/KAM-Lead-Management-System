@@ -26,18 +26,6 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
-// Add migration logic
-(async () => {
-  try {
-    const syncOptions = { alter: true }; // Adjust options: alter = modify, force = recreate
-    logger.info("Synchronizing database schema...");
-    await sequelize.sync(syncOptions); // Sync all models with the database
-    logger.info("Database schema synchronized successfully.");
-  } catch (error) {
-    logger.error("Error synchronizing database schema:", error);
-    process.exit(1); // Exit process on failure
-  }
-})();
 
 db.sequelize = sequelize;
 db.Sequelize = require("sequelize");

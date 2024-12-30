@@ -3,30 +3,44 @@ const router = express.Router();
 const contactController = require("../controllers/contactController");
 const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize");
+const validate = require("../middlewares/validationMiddleware");
+const {
+  createContactValidationSchema,
+  updateContactValidationSchema,
+  validateIdSchema,
+  validateLeadIdSchema,
+  validateLeadContactsSchema,
+} = require("../validations/contactValidation");
 
-// Create a new contact for a lead
-router.post(
-  "/",
-  authenticate,
-  authorize("Admin", "Kam"),
-  contactController.addContact
-);
 
 // Add contacts to a lead
 router.post(
   "/lead",
   authenticate,
-  authorize("Admin", "Kam"),
+  authorize(["Admin", "Kam"]),
+  validate({
+    body: validateLeadContactsSchema,
+  }),
   contactController.addContactsToLead
 );
 
 // Get a contact by ID
-router.get("/:id", authenticate, contactController.getContactById);
+router.get(
+  "/:id",
+  authenticate,
+  validate({
+    params: validateIdSchema,
+  }),
+  contactController.getContactById
+);
 
 // Get all contacts for a specific lead
 router.get(
   "/lead/:leadId",
   authenticate,
+  validate({
+    params: validateLeadIdSchema,
+  }),
   contactController.getContactsByLeadId
 );
 
@@ -34,7 +48,11 @@ router.get(
 router.put(
   "/:id",
   authenticate,
-  authorize("Admin", "Kam"),
+  authorize(["Admin", "Kam"]),
+  validate({
+    params: validateIdSchema,
+    body: updateContactValidationSchema,
+  }),
   contactController.updateContact
 );
 
@@ -42,7 +60,10 @@ router.put(
 router.delete(
   "/:id",
   authenticate,
-  authorize("Admin"),
+  authorize(["Admin"]),
+  validate({
+    params: validateIdSchema,
+  }),
   contactController.deleteContact
 );
 

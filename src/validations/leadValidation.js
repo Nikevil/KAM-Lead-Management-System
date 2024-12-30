@@ -40,6 +40,10 @@ const leadValidationSchemas = {
       "number.min": "Call Frequency should be at least 1",
       "number.max": "Call Frequency should not exceed 30",
     }),
+    kamId: Joi.number().integer().required().messages({
+      "number.base": "Kam ID must be a number",
+      "any.required": "Kam ID is required",
+    }),
   }),
 
   // Validation schema for updating a lead

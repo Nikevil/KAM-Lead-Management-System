@@ -23,8 +23,10 @@ exports.getLeadById = async (req, res, next) => {
 
 // add a new lead
 exports.addLead = async (req, res, next) => {
-  const { restaurantName, cuisineType, location, leadSource, leadStatus } =
+  const { restaurantName, cuisineType, location, leadSource, leadStatus, kamId } =
     req.body;
+
+  const userId = req.user.id;
   try {
     await leadRepository.validateLead(restaurantName, location);
     const lead = await leadRepository.createLead({
@@ -33,7 +35,8 @@ exports.addLead = async (req, res, next) => {
       location,
       leadSource,
       leadStatus,
-    });
+      userId: kamId,
+    }, userId);
     res.status(201).json({ message: "Lead added successfully", lead });
   } catch (error) {
     next(error);
@@ -43,9 +46,11 @@ exports.addLead = async (req, res, next) => {
 // update a lead
 exports.updateLead = async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const updatedLead = await leadRepository.updateLead(
       req.params.id,
-      req.body
+      req.body,
+      userId
     );
     res.status(200).json(updatedLead);
   } catch (error) {
@@ -84,7 +89,8 @@ exports.getLeadsRequiringCalls = async (req, res, next) => {
 // record a call
 exports.recordCall = async (req, res, next) => {
   try {
-    const updatedLead = await leadRepository.recordCall(req.params.leadId);
+    const userId = req.user.id;
+    const updatedLead = await leadRepository.recordCall(req.params.leadId, userId);
 
     res.status(200).json({
       message: "Call recorded successfully",
@@ -99,6 +105,7 @@ exports.recordCall = async (req, res, next) => {
 exports.updateCallFrequency = async (req, res, next) => {
   try {
     const { callFrequency } = req.body;
+    const userId = req.user.id;
 
     if (!callFrequency) {
       return res.status(400).json({ error: "callFrequency are required" });
@@ -106,7 +113,8 @@ exports.updateCallFrequency = async (req, res, next) => {
 
     const updatedLead = await leadRepository.updateCallFrequency(
       req.params.leadId,
-      callFrequency
+      callFrequency,
+      userId
     );
 
     res.status(200).json({
@@ -155,8 +163,9 @@ exports.getLeadPerformanceMetrics = async (req, res, next) => {
 exports.transferLeads = async (req, res, next) => {
   try {
     const { oldUserId, newUserId } = req.body;
+    const userId = req.user.id;
 
-    const result = await leadRepository.transferLeads(oldUserId, newUserId);
+    const result = await leadRepository.transferLeads(oldUserId, newUserId, userId);
 
     if (result[0] === 0) {
       return res

@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 exports.addUser = async (req, res, next) => {
   try {
     const { name, username, password, email, phone, status, roles } = req.body;
+    const userId = req.user.id;
 
     // Validate if the user already exists
     await userRepository.validateUser({ username });
@@ -24,17 +25,17 @@ exports.addUser = async (req, res, next) => {
     }
 
     // Create the user
-    const user = await userRepository.createUser(
+    const user = await userRepository.createUser({
       name,
       username,
       password,
       email,
       status,
-      phone
-    );
+      phone,
+    }, userId);
 
     // Map roles to the user by creating entries in UserRole
-    const userRoles = roles.map((roleId) => ({ userId: user.id, roleId }));
+    const userRoles = roles.map((roleId) => ({ userId: user.id, roleId, createdBy: userId, updatedBy: userId }));
 
     if (roles && roles.length > 0) {
       await userRepository.addUserRoles(userRoles);
@@ -51,6 +52,8 @@ exports.addUser = async (req, res, next) => {
         phone: user.phone,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        createdBy: user.createdBy,
+        updatedBy: user.updatedBy,
       },
     });
   } catch (error) {
@@ -80,6 +83,7 @@ exports.getUserById = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   try {
     const { username, email, phone, roles, status } = req.body;
+    const userId = req.user.id;
 
     // Validate roles if provided
     if (roles && roles.length > 0) {
@@ -96,12 +100,13 @@ exports.updateUser = async (req, res, next) => {
 
     const user = await userRepository.updateUser(
       { username, email, phone, status },
-      req.params.id
+      req.params.id,
+      userId
     );
 
     // Map roles to the user by creating entries in UserRole if roles are provided
     if (roles && roles.length > 0) {
-      const userRoles = roles.map((roleId) => ({ userId: user.id, roleId }));
+      const userRoles = roles.map((roleId) => ({ userId: user.id, roleId, updatedBy: userId }));
       await userRepository.addUserRoles(userRoles);
     }
 

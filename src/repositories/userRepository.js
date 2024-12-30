@@ -3,15 +3,15 @@ const db = require('../models');
 class UserRepository {
   
   // create a new user
-  async createUser(name, username, password, email, status = 'active', phone) {
-    return await db.User.create({ name, username, password, email, status, phone });
+  async createUser({name, username, password, email, status = 'active', phone}, userId) {
+    return await db.User.create({ name, username, password, email, status, phone, createdBy: userId, updatedBy: userId });
   }
 
   // get all users
   async getAllUsers() {
     return db.User.findAll(
       {
-      attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt'],
+      attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'],
       include: [{
         model: db.Role,
         attributes: ['id', 'name'],
@@ -31,7 +31,7 @@ class UserRepository {
   // find user by id
   async findUserById(id) {
     return db.User.findByPk(id, {
-      attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt'],
+      attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'],
       include: [{
         model: db.Role,
         attributes: ['id', 'name'],
@@ -52,7 +52,7 @@ class UserRepository {
   }
   
   // update user
-  async updateUser({ name, username, email, phone, status, roles }, id) {
+  async updateUser({ name, username, email, phone, status }, id, userId) {
     const user = await db.User.findByPk(id);
     if (!user) {
       throw new Error('User not found');
@@ -72,7 +72,7 @@ class UserRepository {
     }
     await this.validateUser(whereCondition);
 
-    await db.User.update({ name, email, username, phone, status }, { where: { id } });
+    await db.User.update({ name, email, username, phone, status, updatedBy: userId }, { where: { id } });
     return user;
   }
 

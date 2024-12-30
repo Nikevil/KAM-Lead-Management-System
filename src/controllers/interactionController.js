@@ -49,9 +49,11 @@ exports.updateInteraction = async (req, res, next) => {
   try {
     const { id } = req.params;
     const interactionData = req.body;
+    const userId = req.user.id;
     const updatedInteraction = await interactionRepository.updateInteraction(
       id,
-      interactionData
+      interactionData,
+      userId
     );
     if (!updatedInteraction) {
       return res.status(404).json({ error: "Interaction not found" });

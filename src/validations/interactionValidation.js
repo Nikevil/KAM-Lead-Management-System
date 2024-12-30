@@ -52,8 +52,16 @@ const validateIdSchema = Joi.object({
   }),
 });
 
+const validateLeadIdSchema = Joi.object({
+  leadId: Joi.number().integer().required().messages({
+    "any.required": "leadId is required",
+    "number.base": "leadId must be a number",
+  }),
+});
+
 module.exports = {
   createInteractionValidationSchema,
   updateInteractionValidationSchema,
   validateIdSchema,
+  validateLeadIdSchema,
 };

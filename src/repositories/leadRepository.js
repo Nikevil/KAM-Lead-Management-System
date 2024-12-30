@@ -23,15 +23,15 @@ class LeadRepository {
   }
 
   // Create a new lead
-  async createLead(leadData) {
-    return db.Lead.create(leadData);
+  async createLead(leadData, userId) {
+    return db.Lead.create({...leadData, createdBy: userId, updatedBy: userId});
   }
 
   // Update a lead by ID
-  async updateLead(id, leadData) {
+  async updateLead(id, leadData, userId) {
     const lead = await db.Lead.findByPk(id);
     if (!lead) throw new Error("Lead not found");
-    return await lead.update(leadData);
+    return await lead.update({...leadData, updatedBy: userId});
   }
 
   // Delete a lead
@@ -61,7 +61,7 @@ class LeadRepository {
   }
 
   // Update last call date for a lead
-  async recordCall(leadId) {
+  async recordCall(leadId, userId) {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
@@ -72,7 +72,7 @@ class LeadRepository {
       const nextCallDate = new Date();
       nextCallDate.setDate(today.getDate() + lead.callFrequency);
 
-      await lead.update({ lastCallDate: today, nextCallDate });
+      await lead.update({ lastCallDate: today, nextCallDate, updatedBy: userId });
       return lead;
     } catch (error) {
       throw new Error("Error recording call: " + error.message);
@@ -80,7 +80,7 @@ class LeadRepository {
   }
 
   // Update call frequency for a lead
-  async updateCallFrequency(leadId, callFrequency) {
+  async updateCallFrequency(leadId, callFrequency, userId) {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
@@ -90,7 +90,7 @@ class LeadRepository {
       const nextCallDate = new Date();
       nextCallDate.setDate(nextCallDate.getDate() + callFrequency);
 
-      await lead.update({ callFrequency, nextCallDate });
+      await lead.update({ callFrequency, nextCallDate, updatedBy: userId });
       return lead;
     } catch (error) {
       throw new Error("Error updating call frequency: " + error.message);
@@ -220,11 +220,11 @@ class LeadRepository {
     };
   }
 
-  async transferLeads(oldUserId, newUserId) {
+  async transferLeads(oldUserId, newUserId, userId) {
     try {
       // Update the userId for all leads associated with the oldUserId
       const result = await db.Lead.update(
-        { userId: newUserId },
+        { userId: newUserId, updatedById: userId },
         { where: { userId: oldUserId } }
       );
 

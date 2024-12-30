@@ -89,9 +89,10 @@ exports.updateOrder = async (req, res, next) => {
   try {
     const { id } = req.params;
     const orderData = req.body;
+    const userId = req.user.id;
 
     // Update the order using the repository
-    const updatedOrder = await orderRepository.updateOrder(id, orderData);
+    const updatedOrder = await orderRepository.updateOrder(id, orderData, userId);
 
     if (!updatedOrder) {
       return res.status(404).json({

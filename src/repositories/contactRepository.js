@@ -1,20 +1,6 @@
 const db = require("../models");
 
 class ContactRepository {
-  // Create a new contact
-  async createContact({ name, phone, email, role }) {
-    try {
-      const newContact = await db.Contact.create({
-        name,
-        phone,
-        email,
-        role,
-      });
-      return newContact;
-    } catch (error) {
-      throw new Error("Error creating contact: " + error.message);
-    }
-  }
 
   async validateContact(phone) {
     const existingContact = await db.Contact.findOne({
@@ -56,7 +42,7 @@ class ContactRepository {
   }
 
   // Update a contact by its ID
-  async updateContact(id, { name, phone, email, role }) {
+  async updateContact(id, { name, phone, email, role }, userId) {
     try {
       const contact = await db.Contact.findByPk(id);
       if (!contact) {
@@ -69,6 +55,7 @@ class ContactRepository {
         phone,
         email,
         role,
+        updatedBy: userId,
       });
       return contact;
     } catch (error) {
@@ -91,7 +78,7 @@ class ContactRepository {
   }
 
   // Add contacts to a lead
-  async addContactsToLead({ leadId, contacts }) {
+  async addContactsToLead({ leadId, contacts }, userId) {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
@@ -111,13 +98,21 @@ class ContactRepository {
         (contact) => !existingPhoneNumbers.includes(contact.phone)
       );
 
+      const validContactsWithCreatedBy = validContacts.map((contact) => ({
+        ...contact,
+        createdBy: userId,
+        updatedBy: userId,
+      }));
+
       let createdContacts = [];
       // Use bulkCreate to create valid contacts
-      if (validContacts.length > 0) {
-        createdContacts = await db.Contact.bulkCreate(validContacts);
+      if (validContactsWithCreatedBy.length > 0) {
+        createdContacts = await db.Contact.bulkCreate(validContactsWithCreatedBy);
         const leadContacts = createdContacts.map((contact) => ({
           leadId: lead.id,
           contactId: contact.id,
+          createdBy: userId,
+          updatedBy: userId,
         }));
         await db.LeadContacts.bulkCreate(leadContacts);
       }

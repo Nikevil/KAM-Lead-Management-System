@@ -48,6 +48,14 @@ module.exports = (sequelize) => {
         type: DataTypes.JSONB,
         allowNull: true,
       },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       tableName: "orders",

@@ -35,6 +35,14 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
+      createdBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      updatedBy: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      }
     },
     {
       tableName: "contacts",

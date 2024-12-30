@@ -1,33 +1,13 @@
 const contactRepository = require("../repositories/contactRepository");
 
-// Create a new contact
-exports.addContact = async (req, res, next) => {
-  const { name, phone, email, role } = req.body;
-  try {
-    // Validate the contact
-    await contactRepository.validateContact(phone);
-
-    // Call the repository function to create a contact
-    const newContact = await contactRepository.createContact({
-      name,
-      phone,
-      email,
-      role,
-    });
-
-    res.status(201).json({ message: "Contact created", contact: newContact });
-  } catch (error) {
-    next(error);
-  }
-};
-
 exports.addContactsToLead = async (req, res, next) => {
   const { leadId, contacts } = req.body;
+  const userId = req.user.id;
   try {
     const contactResponses = await contactRepository.addContactsToLead({
       leadId,
       contacts,
-    });
+    }, userId);
 
     res
       .status(201)
@@ -70,9 +50,11 @@ exports.getContactsByLeadId = async (req, res, next) => {
 // Update a contact by ID
 exports.updateContact = async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const updatedContact = await contactRepository.updateContact(
       req.params.id,
-      req.body
+      req.body,
+      userId
     );
     if (!updatedContact) {
       return res.status(404).json({ message: "Contact not found" });
