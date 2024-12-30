@@ -5,7 +5,7 @@ const createOrderSchema = Joi.object({
   orderDate: Joi.date().required(),
   amount: Joi.number().positive().required(),
   productCategories: Joi.array().items(Joi.string()).optional(), // This is an array of strings
-  status: Joi.string().valid('pending', 'completed', 'cancelled').optional(), // assuming only these statuses are allowed
+  status: Joi.string().valid("pending", "completed", "cancelled").optional(), // assuming only these statuses are allowed
 });
 
 const updateOrderSchema = Joi.object({
@@ -13,7 +13,7 @@ const updateOrderSchema = Joi.object({
   orderDate: Joi.date().optional(),
   amount: Joi.number().positive().optional(),
   productCategories: Joi.array().items(Joi.string()).optional(),
-  status: Joi.string().valid('pending', 'completed', 'cancelled').optional(),
+  status: Joi.string().valid("pending", "completed", "cancelled").optional(),
 });
 
 const getOrdersByLeadIdSchema = Joi.object({

@@ -4,7 +4,12 @@ const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize.js");
 const validate = require("../middlewares/validationMiddleware");
-const { createInteractionValidationSchema, updateInteractionValidationSchema, validateIdSchema, validateLeadIdSchema} = require("../validations/interactionValidation");
+const {
+  createInteractionValidationSchema,
+  updateInteractionValidationSchema,
+  validateIdSchema,
+  validateLeadIdSchema,
+} = require("../validations/interactionValidation");
 
 // Route to create a new interaction (requires authentication and authorization)
 router.post(
@@ -18,16 +23,21 @@ router.post(
 );
 
 // Route to get interactions by id (requires authentication)
-router.get("/:id", authenticate, validate({
-  params: validateIdSchema
-}), interactionController.getInteractionById);
+router.get(
+  "/:id",
+  authenticate,
+  validate({
+    params: validateIdSchema,
+  }),
+  interactionController.getInteractionById
+);
 
 // Route to get all interactions for a specific lead (requires authentication)
 router.get(
   "/lead/:leadId",
   authenticate,
   validate({
-    params: validateLeadIdSchema
+    params: validateLeadIdSchema,
   }),
   interactionController.getInteractionsByLeadId
 );
@@ -39,7 +49,7 @@ router.put(
   authorize(["Admin", "Kam"]),
   validate({
     params: validateIdSchema,
-    body: updateInteractionValidationSchema
+    body: updateInteractionValidationSchema,
   }),
   interactionController.updateInteraction
 );
@@ -50,7 +60,7 @@ router.delete(
   authenticate,
   authorize(["Admin"]),
   validate({
-    params: validateIdSchema
+    params: validateIdSchema,
   }),
   interactionController.deleteInteraction
 );

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 // Schema for creating a new interaction
 const createInteractionValidationSchema = Joi.object({
@@ -9,11 +9,15 @@ const createInteractionValidationSchema = Joi.object({
   contactId: Joi.number().integer().optional().allow(null).messages({
     "number.base": "contactId must be a number",
   }),
-  interactionType: Joi.string().valid("call", "email", "meeting", "other").required().messages({
-    "any.required": "interactionType is required",
-    "string.base": "interactionType must be a string",
-    "any.only": "interactionType must be one of 'call', 'email', 'meeting', or 'other'",
-  }),
+  interactionType: Joi.string()
+    .valid("call", "email", "meeting", "other")
+    .required()
+    .messages({
+      "any.required": "interactionType is required",
+      "string.base": "interactionType must be a string",
+      "any.only":
+        "interactionType must be one of 'call', 'email', 'meeting', or 'other'",
+    }),
   interactionDate: Joi.date().optional().default(Date.now).messages({
     "date.base": "interactionDate must be a valid date",
   }),
@@ -35,7 +39,9 @@ const createInteractionValidationSchema = Joi.object({
 const updateInteractionValidationSchema = Joi.object({
   leadId: Joi.number().integer().optional(),
   contactId: Joi.number().integer().optional().allow(null),
-  interactionType: Joi.string().valid("call", "email", "meeting", "other").optional(),
+  interactionType: Joi.string()
+    .valid("call", "email", "meeting", "other")
+    .optional(),
   interactionDate: Joi.date().optional(),
   duration: Joi.number().integer().optional().allow(null),
   outcome: Joi.string().optional().allow(null),

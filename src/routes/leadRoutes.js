@@ -13,7 +13,7 @@ const {
   transferLeadsValidationSchema,
   getLeadPerformanceMetricsValidationSchema,
   validateIdSchema,
-  validateLeadIdSchema
+  validateLeadIdSchema,
 } = require("../validations/leadValidation");
 
 // Add a new lead
@@ -22,7 +22,7 @@ router.post(
   authenticate,
   authorize(["Admin", "Kam"]),
   validate({
-    body: addLeadValidationSchema
+    body: addLeadValidationSchema,
   }),
   leadController.addLead
 );
@@ -65,7 +65,7 @@ router.get(
   authenticate,
   authorize(["Admin", "Kam"]),
   validate({
-    query: getLeadPerformanceMetricsValidationSchema
+    query: getLeadPerformanceMetricsValidationSchema,
   }),
   leadController.getLeadPerformanceMetrics
 );
@@ -76,7 +76,7 @@ router.put(
   authenticate,
   authorize(["Admin"]),
   validate({
-    body: transferLeadsValidationSchema
+    body: transferLeadsValidationSchema,
   }),
   leadController.transferLeads
 );
@@ -87,7 +87,7 @@ router.get(
   authenticate,
   authorize(["Admin", "Kam"]),
   validate({
-    params: validateIdSchema
+    params: validateIdSchema,
   }),
   leadController.getLeadById
 );
@@ -98,9 +98,9 @@ router.put(
   authenticate,
   authorize(["Admin", "Kam"]),
   validate({
-   params: validateIdSchema,
-   body: updateLeadValidationSchema
-   }),
+    params: validateIdSchema,
+    body: updateLeadValidationSchema,
+  }),
   leadController.updateLead
 );
 
@@ -110,7 +110,7 @@ router.delete(
   authenticate,
   authorize(["Admin", "Kam"]),
   validate({
-    params: validateIdSchema
+    params: validateIdSchema,
   }),
   leadController.deleteLead
 );

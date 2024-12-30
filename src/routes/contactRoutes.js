@@ -11,7 +11,6 @@ const {
   validateLeadContactsSchema,
 } = require("../validations/contactValidation");
 
-
 // Add contacts to a lead
 router.post(
   "/lead",

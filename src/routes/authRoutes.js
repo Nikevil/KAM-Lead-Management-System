@@ -5,6 +5,10 @@ const { loginValidationSchema } = require("../validations/authValidation");
 const validate = require("../middlewares/validationMiddleware");
 
 //routes to login
-router.post("/login", validate({ body: loginValidationSchema }), authController.login);
+router.post(
+  "/login",
+  validate({ body: loginValidationSchema }),
+  authController.login
+);
 
 module.exports = router;

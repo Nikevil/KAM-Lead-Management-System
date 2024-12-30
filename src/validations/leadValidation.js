@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 // Schema for adding a new lead
 const addLeadValidationSchema = Joi.object({
@@ -28,7 +28,8 @@ const addLeadValidationSchema = Joi.object({
     .messages({
       "string.base": "Lead Source must be a string",
       "any.required": "Lead Source is required",
-      "any.only": "Lead Source must be one of the following: Advertisement, Referral, Direct, Online",
+      "any.only":
+        "Lead Source must be one of the following: Advertisement, Referral, Direct, Online",
     }),
   leadStatus: Joi.string()
     .valid("New", "In Progress", "Follow Up", "Closed", "Won", "Lost")
@@ -120,5 +121,5 @@ module.exports = {
   transferLeadsValidationSchema,
   getLeadPerformanceMetricsValidationSchema,
   validateIdSchema,
-  validateLeadIdSchema
+  validateLeadIdSchema,
 };
