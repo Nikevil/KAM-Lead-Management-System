@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require('../models');
 
 class ContactRepository {
 
@@ -9,7 +9,7 @@ class ContactRepository {
       },
     });
     if (existingContact) {
-      throw new Error("Contact already exists");
+      throw new Error('Contact already exists');
     }
   }
 
@@ -19,7 +19,7 @@ class ContactRepository {
       const contact = await db.Contact.findByPk(id);
       return contact;
     } catch (error) {
-      throw new Error("Error fetching contact: " + error.message);
+      throw new Error('Error fetching contact: ' + error.message);
     }
   }
 
@@ -37,7 +37,7 @@ class ContactRepository {
       });
       return contacts;
     } catch (error) {
-      throw new Error("Error fetching contacts by lead ID: " + error.message);
+      throw new Error('Error fetching contacts by lead ID: ' + error.message);
     }
   }
 
@@ -46,7 +46,7 @@ class ContactRepository {
     try {
       const contact = await db.Contact.findByPk(id);
       if (!contact) {
-        throw new Error("Contact not found");
+        throw new Error('Contact not found');
       }
 
       // Update contact details
@@ -59,7 +59,7 @@ class ContactRepository {
       });
       return contact;
     } catch (error) {
-      throw new Error("Error updating contact: " + error.message);
+      throw new Error('Error updating contact: ' + error.message);
     }
   }
 
@@ -72,7 +72,7 @@ class ContactRepository {
       }
       return await contact.destroy(); // Delete the contact from the database
     } catch (error) {
-      throw new Error("Error deleting contact: " + error.message);
+      throw new Error('Error deleting contact: ' + error.message);
     }
   }
 
@@ -81,20 +81,20 @@ class ContactRepository {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
-        throw new Error("Lead not found");
+        throw new Error('Lead not found');
       }
 
       // Fetch all existing phone numbers
       const existingContacts = await db.Contact.findAll({
-        attributes: ["phone"],
+        attributes: ['phone'],
       });
       const existingPhoneNumbers = existingContacts.map(
-        (contact) => contact.phone
+        (contact) => contact.phone,
       );
 
       // Filter out contacts with existing phone numbers
       const validContacts = contacts.filter(
-        (contact) => !existingPhoneNumbers.includes(contact.phone)
+        (contact) => !existingPhoneNumbers.includes(contact.phone),
       );
 
       const validContactsWithCreatedBy = validContacts.map((contact) => ({
@@ -118,7 +118,7 @@ class ContactRepository {
 
       return createdContacts;
     } catch (error) {
-      throw new Error("Error adding contacts to lead: " + error.message);
+      throw new Error('Error adding contacts to lead: ' + error.message);
     }
   }
 }

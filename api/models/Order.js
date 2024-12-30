@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const Order = sequelize.define(
-    "Order",
+    'Order',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,8 +13,8 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "leads",
-          key: "id",
+          model: 'leads',
+          key: 'id',
         },
       },
       amount: {
@@ -30,19 +30,19 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.NOW,
       },
       status: {
-        type: DataTypes.ENUM("pending", "completed", "cancelled"),
+        type: DataTypes.ENUM('pending', 'completed', 'cancelled'),
         allowNull: false,
-        defaultValue: "completed",
+        defaultValue: 'completed',
       },
       productCategories: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true,
-        comment: "Categories of products purchased in the order",
+        comment: 'Categories of products purchased in the order',
       },
       notes: {
         type: DataTypes.TEXT,
         allowNull: true,
-        comment: "Additional information about the order",
+        comment: 'Additional information about the order',
       },
       orderDetails: {
         type: DataTypes.JSONB,
@@ -58,19 +58,19 @@ module.exports = (sequelize) => {
       },
     },
     {
-      tableName: "orders",
+      tableName: 'orders',
       timestamps: true,
       indexes: [
-        { fields: ["leadId"] },
-        { fields: ["orderDate"] },
-        { fields: ["status"] },
+        { fields: ['leadId'] },
+        { fields: ['orderDate'] },
+        { fields: ['status'] },
       ],
-    }
+    },
   );
 
   // Associations
   Order.associate = (models) => {
-    Order.belongsTo(models.Lead, { foreignKey: "leadId", as: "lead" });
+    Order.belongsTo(models.Lead, { foreignKey: 'leadId', as: 'lead' });
   };
 
   return Order;

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const LeadContacts = sequelize.define(
-    "LeadContacts",
+    'LeadContacts',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,21 +11,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "Leads",
-          key: "id",
+          model: 'Leads',
+          key: 'id',
         },
       },
       contactId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "Contacts",
-          key: "id",
+          model: 'Contacts',
+          key: 'id',
         },
       },
       status: {
-        type: DataTypes.ENUM("active", "inactive"),
-        defaultValue: "active",
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active',
       },
       createdBy: {
         type: DataTypes.INTEGER,
@@ -34,16 +34,16 @@ module.exports = (sequelize, DataTypes) => {
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
     },
     {
-      tableName: "lead_contacts",
+      tableName: 'lead_contacts',
       timestamps: true,
       indexes: [
-        { fields: ["leadId", "contactId"], unique: true },
-        { fields: ["status"] },
+        { fields: ['leadId', 'contactId'], unique: true },
+        { fields: ['status'] },
       ],
-    }
+    },
   );
 
   return LeadContacts;

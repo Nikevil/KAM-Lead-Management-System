@@ -1,9 +1,9 @@
-const express = require("express");
-const orderController = require("../controllers/orderController");
-const authenticate = require("../middlewares/authenticate");
-const authorize = require("../middlewares/authorize");
+const express = require('express');
+const orderController = require('../controllers/orderController');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
 const router = express.Router();
-const validate = require("../middlewares/validationMiddleware");
+const validate = require('../middlewares/validationMiddleware');
 const {
   createOrderSchema,
   updateOrderSchema,
@@ -12,81 +12,81 @@ const {
   getFilteredOrdersSchema,
   getOrderingPatternsSchema,
   deleteOrderSchema,
-} = require("../validations/orderValidation");
+} = require('../validations/orderValidation');
 
 // Route to create a new order (requires authentication and authorization)
 router.post(
-  "/",
+  '/',
   authenticate,
-  authorize(["Admin", "Kam"]),
+  authorize(['Admin', 'Kam']),
   validate({
     body: createOrderSchema,
   }),
-  orderController.createOrder
+  orderController.createOrder,
 );
 
 // Route to get filtered orders (e.g., by date range or product category)
 router.get(
-  "/filtered",
+  '/filtered',
   authenticate,
   validate({
     query: getFilteredOrdersSchema,
   }),
-  orderController.getFilteredOrders
+  orderController.getFilteredOrders,
 );
 
 // Route to get ordering patterns
 router.get(
-  "/ordering-patterns",
+  '/ordering-patterns',
   authenticate,
-  authorize(["Admin", "Kam"]),
+  authorize(['Admin', 'Kam']),
   validate({
     query: getOrderingPatternsSchema,
   }),
-  orderController.getOrderingPatterns
+  orderController.getOrderingPatterns,
 );
 
 // Route to get all orders for a specific lead (requires authentication and authorization)
 router.get(
-  "/lead/:leadId",
+  '/lead/:leadId',
   authenticate,
   validate({
     params: getOrdersByLeadIdSchema,
   }),
-  orderController.getOrdersByLeadId
+  orderController.getOrdersByLeadId,
 );
 
 // Route to get a specific order by its ID (requires authentication and authorization)
 router.get(
-  "/:id",
+  '/:id',
   authenticate,
   validate({
     params: getOrderByIdSchema,
   }),
-  orderController.getOrderById
+  orderController.getOrderById,
 );
 
 // Route to update an order by its ID (requires authentication and authorization)
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize(["Admin", "Kam"]),
+  authorize(['Admin', 'Kam']),
   validate({
     params: getOrderByIdSchema,
     body: updateOrderSchema,
   }),
-  orderController.updateOrder
+  orderController.updateOrder,
 );
 
 // Route to delete an order by its ID (requires authentication and authorization)
 router.delete(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize(["Admin"]),
+  authorize(['Admin']),
   validate({
     params: deleteOrderSchema,
   }),
-  orderController.deleteOrder
+  orderController.deleteOrder,
 );
 
 module.exports = router;

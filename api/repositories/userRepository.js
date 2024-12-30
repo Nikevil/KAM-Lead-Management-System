@@ -11,13 +11,13 @@ class UserRepository {
   async getAllUsers() {
     return db.User.findAll(
       {
-      attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'],
-      include: [{
-        model: db.Role,
-        attributes: ['id', 'name'],
-        through: { attributes: [] },
-      }]
-    });
+        attributes: ['id', 'username', 'email', 'status', 'createdAt', 'updatedAt', 'createdBy', 'updatedBy'],
+        include: [{
+          model: db.Role,
+          attributes: ['id', 'name'],
+          through: { attributes: [] },
+        }],
+      });
   }
 
   // validate user
@@ -36,7 +36,7 @@ class UserRepository {
         model: db.Role,
         attributes: ['id', 'name'],
         through: { attributes: [] },
-      }]
+      }],
     });
   }
 
@@ -47,7 +47,7 @@ class UserRepository {
       include: [{
         model: db.Role,
         through: { attributes: [] },
-      }]
+      }],
     });
   }
   
@@ -82,17 +82,17 @@ class UserRepository {
   }
 
   // Delete User by its ID
-    async deleteUser(id) {
-      try {
-        const user = await db.User.findByPk(id);
-        if (!user) {
-          return null;
-        }
-        return await user.destroy(); // Delete the order from the database
-      } catch (error) {
-        throw new Error("Error deleting order: " + error.message);
+  async deleteUser(id) {
+    try {
+      const user = await db.User.findByPk(id);
+      if (!user) {
+        return null;
       }
+      return await user.destroy(); // Delete the order from the database
+    } catch (error) {
+      throw new Error('Error deleting order: ' + error.message);
     }
+  }
 }
 
 module.exports = new UserRepository();

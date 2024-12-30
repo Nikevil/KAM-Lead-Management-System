@@ -1,6 +1,6 @@
 module.exports = function authorize(roles = []) {
   // If roles is a string, convert it into an array
-  if (typeof roles === "string") {
+  if (typeof roles === 'string') {
     roles = [roles];
   }
 
@@ -9,7 +9,7 @@ module.exports = function authorize(roles = []) {
     if (!req.user || !req.user.Roles || req.user.Roles.length === 0) {
       return res
         .status(403)
-        .json({ message: "Forbidden, no roles assigned to user" });
+        .json({ message: 'Forbidden, no roles assigned to user' });
     }
 
     // Check if any of the user's roles match the required roles
@@ -18,7 +18,7 @@ module.exports = function authorize(roles = []) {
     const hasRequiredRole = userRoles.some((role) => roles.includes(role));
 
     if (!hasRequiredRole) {
-      return res.status(403).json({ message: "Forbidden, insufficient role" });
+      return res.status(403).json({ message: 'Forbidden, insufficient role' });
     }
 
     // If the user has the required role, proceed to the next middleware or route handler

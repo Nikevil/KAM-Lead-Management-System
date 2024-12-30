@@ -1,8 +1,8 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "User",
+    'User',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("active", "inactive"),
-        defaultValue: "active",
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active',
       },
       createdBy: {
         type: DataTypes.INTEGER,
@@ -46,15 +46,15 @@ module.exports = (sequelize, DataTypes) => {
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
     },
     {
-      tableName: "users",
+      tableName: 'users',
       timestamps: true,
       indexes: [
-        { fields: ["username"], unique: true },
-        { fields: ["email"], unique: true },
-        { fields: ["phone"], unique: true },
+        { fields: ['username'], unique: true },
+        { fields: ['email'], unique: true },
+        { fields: ['phone'], unique: true },
       ],
       hooks: {
         beforeCreate: async (user) => {
@@ -70,15 +70,15 @@ module.exports = (sequelize, DataTypes) => {
           }
         },
       },
-    }
+    },
   );
 
   // Associations
   User.associate = (models) => {
-    User.hasMany(models.Interaction, { foreignKey: "createdBy" });
+    User.hasMany(models.Interaction, { foreignKey: 'createdBy' });
     User.belongsToMany(models.Role, {
       through: models.UserRole,
-      foreignKey: "userId",
+      foreignKey: 'userId',
     });
   };
 

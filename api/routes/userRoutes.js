@@ -1,60 +1,60 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const userController = require("../controllers/userController.js");
-const authenticate = require("../middlewares/authenticate.js");
-const authorize = require("../middlewares/authorize.js");
-const validate = require("../middlewares/validationMiddleware.js");
+const userController = require('../controllers/userController.js');
+const authenticate = require('../middlewares/authenticate.js');
+const authorize = require('../middlewares/authorize.js');
+const validate = require('../middlewares/validationMiddleware.js');
 const {
   addUserValidationSchema,
   updateUserValidationSchema,
   userIdValidationSchema,
-} = require("../validations/userValidation.js");
+} = require('../validations/userValidation.js');
 
 // Route to create a new user (requires authentication and authorization)
 router.post(
-  "/",
+  '/',
   authenticate,
-  authorize("Admin"),
+  authorize('Admin'),
   validate({
     body: addUserValidationSchema,
   }),
-  userController.addUser
+  userController.addUser,
 );
 
 // Route to get all users (requires authentication and authorization)
-router.get("/", authenticate, userController.getUsers);
+router.get('/', authenticate, userController.getUsers);
 
 // Route to get a specific user by its ID (requires authentication and authorization)
 router.get(
-  "/:id",
+  '/:id',
   authenticate,
   validate({
     params: userIdValidationSchema,
   }),
-  userController.getUserById
+  userController.getUserById,
 );
 
 // Route to update a user by its ID (requires authentication and authorization)
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize("Admin"),
+  authorize('Admin'),
   validate({
     params: userIdValidationSchema,
     body: updateUserValidationSchema,
   }),
-  userController.updateUser
+  userController.updateUser,
 );
 
 // Route to delete a user by its ID (requires authentication and authorization)
 router.delete(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize("Admin"),
+  authorize('Admin'),
   validate({
     params: userIdValidationSchema,
   }),
-  userController.deleteUser
+  userController.deleteUser,
 );
 
 module.exports = router;

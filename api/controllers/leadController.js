@@ -1,4 +1,4 @@
-const leadRepository = require("../repositories/leadRepository");
+const leadRepository = require('../repositories/leadRepository');
 
 // get all leads
 exports.getLeads = async (req, res, next) => {
@@ -14,7 +14,7 @@ exports.getLeads = async (req, res, next) => {
 exports.getLeadById = async (req, res, next) => {
   try {
     const lead = await leadRepository.findLeadById(req.params.id);
-    if (!lead) return res.status(404).json({ message: "Lead not found" });
+    if (!lead) return res.status(404).json({ message: 'Lead not found' });
     res.status(200).json(lead);
   } catch (error) {
     next(error);
@@ -37,7 +37,7 @@ exports.addLead = async (req, res, next) => {
       leadStatus,
       userId: kamId,
     }, userId);
-    res.status(201).json({ message: "Lead added successfully", lead });
+    res.status(201).json({ message: 'Lead added successfully', lead });
   } catch (error) {
     next(error);
   }
@@ -50,7 +50,7 @@ exports.updateLead = async (req, res, next) => {
     const updatedLead = await leadRepository.updateLead(
       req.params.id,
       req.body,
-      userId
+      userId,
     );
     res.status(200).json(updatedLead);
   } catch (error) {
@@ -62,7 +62,7 @@ exports.updateLead = async (req, res, next) => {
 exports.deleteLead = async (req, res, next) => {
   try {
     const lead = await leadRepository.getLeadById(req.params.id);
-    if (!lead) return res.status(404).json({ message: "Lead not found" });
+    if (!lead) return res.status(404).json({ message: 'Lead not found' });
 
     await leadRepository.deleteLead(req.params.id);
     res.status(204).send();
@@ -77,7 +77,7 @@ exports.getLeadsRequiringCalls = async (req, res, next) => {
     const leads = await leadRepository.getLeadsRequiringCalls();
 
     if (!leads || leads.length === 0) {
-      return res.status(404).json({ error: "No leads requiring calls today" });
+      return res.status(404).json({ error: 'No leads requiring calls today' });
     }
 
     res.status(200).json(leads);
@@ -93,7 +93,7 @@ exports.recordCall = async (req, res, next) => {
     const updatedLead = await leadRepository.recordCall(req.params.leadId, userId);
 
     res.status(200).json({
-      message: "Call recorded successfully",
+      message: 'Call recorded successfully',
       lead: updatedLead,
     });
   } catch (error) {
@@ -108,17 +108,17 @@ exports.updateCallFrequency = async (req, res, next) => {
     const userId = req.user.id;
 
     if (!callFrequency) {
-      return res.status(400).json({ error: "callFrequency are required" });
+      return res.status(400).json({ error: 'callFrequency are required' });
     }
 
     const updatedLead = await leadRepository.updateCallFrequency(
       req.params.leadId,
       callFrequency,
-      userId
+      userId,
     );
 
     res.status(200).json({
-      message: "Call frequency updated successfully",
+      message: 'Call frequency updated successfully',
       lead: updatedLead,
     });
   } catch (error) {
@@ -151,7 +151,7 @@ exports.getLeadPerformanceMetrics = async (req, res, next) => {
   try {
     const { id } = req.query;
     const performanceMetrics = await leadRepository.getLeadPerformanceMetrics(
-      id
+      id,
     );
     res.status(200).json(performanceMetrics);
   } catch (error) {
@@ -170,7 +170,7 @@ exports.transferLeads = async (req, res, next) => {
     if (result[0] === 0) {
       return res
         .status(404)
-        .json({ message: "No leads found for the specified oldUserId." });
+        .json({ message: 'No leads found for the specified oldUserId.' });
     }
 
     return res.status(200).json({

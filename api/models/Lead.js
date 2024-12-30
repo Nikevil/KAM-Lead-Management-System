@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const Lead = sequelize.define(
-    "Lead",
+    'Lead',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -27,14 +27,14 @@ module.exports = (sequelize) => {
       },
       leadStatus: {
         type: DataTypes.ENUM(
-          "New",
-          "In Progress",
-          "Follow Up",
-          "Closed",
-          "Won",
-          "Lost"
+          'New',
+          'In Progress',
+          'Follow Up',
+          'Closed',
+          'Won',
+          'Lost',
         ),
-        defaultValue: "New",
+        defaultValue: 'New',
       },
       callFrequency: {
         type: DataTypes.INTEGER,
@@ -60,29 +60,29 @@ module.exports = (sequelize) => {
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
     },
     {
-      tableName: "leads",
+      tableName: 'leads',
       timestamps: true,
       indexes: [
         {
           unique: true,
-          fields: ["restaurantName", "location"],
+          fields: ['restaurantName', 'location'],
         },
         {
-          fields: ["userId"],
+          fields: ['userId'],
         },
       ],
-    }
+    },
   );
 
   // Associations
   Lead.associate = (models) => {
-    Lead.belongsTo(models.User, { foreignKey: "userId", allowNull: false });
-    Lead.hasMany(models.LeadContacts, { foreignKey: "leadId" });
-    Lead.hasMany(models.Interaction, { foreignKey: "leadId" });
-    Lead.hasMany(models.Order, { foreignKey: "leadId" });
+    Lead.belongsTo(models.User, { foreignKey: 'userId', allowNull: false });
+    Lead.hasMany(models.LeadContacts, { foreignKey: 'leadId' });
+    Lead.hasMany(models.Interaction, { foreignKey: 'leadId' });
+    Lead.hasMany(models.Order, { foreignKey: 'leadId' });
   };
 
   return Lead;

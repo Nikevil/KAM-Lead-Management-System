@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Contact = sequelize.define(
-    "Contact",
+    'Contact',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -42,23 +42,23 @@ module.exports = (sequelize, DataTypes) => {
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
     },
     {
-      tableName: "contacts",
+      tableName: 'contacts',
       timestamps: true,
-      indexes: [{ fields: ["email"], unique: true }, { fields: ["phone"] }],
-    }
+      indexes: [{ fields: ['email'], unique: true }, { fields: ['phone'] }],
+    },
   );
 
   // Associations
   Contact.associate = (models) => {
     Contact.belongsToMany(models.Lead, {
       through: models.LeadContacts,
-      foreignKey: "contactId",
-      otherKey: "leadId",
+      foreignKey: 'contactId',
+      otherKey: 'leadId',
     });
-    Contact.hasMany(models.Interaction, { foreignKey: "contactId" });
+    Contact.hasMany(models.Interaction, { foreignKey: 'contactId' });
   };
 
   return Contact;

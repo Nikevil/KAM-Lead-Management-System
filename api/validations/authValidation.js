@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const loginValidationSchema = Joi.object({
   username: Joi.string().min(3).max(255).required(),

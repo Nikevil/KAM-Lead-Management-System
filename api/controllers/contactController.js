@@ -1,4 +1,4 @@
-const contactRepository = require("../repositories/contactRepository");
+const contactRepository = require('../repositories/contactRepository');
 
 exports.addContactsToLead = async (req, res, next) => {
   const { leadId, contacts } = req.body;
@@ -11,7 +11,7 @@ exports.addContactsToLead = async (req, res, next) => {
 
     res
       .status(201)
-      .json({ message: "Contacts created", contacts: contactResponses });
+      .json({ message: 'Contacts created', contacts: contactResponses });
   } catch (error) {
     next(error);
   }
@@ -22,7 +22,7 @@ exports.getContactById = async (req, res, next) => {
   try {
     const contact = await contactRepository.getContactById(req.params.id);
     if (!contact) {
-      return res.status(404).json({ message: "Contact not found" });
+      return res.status(404).json({ message: 'Contact not found' });
     }
     res.status(200).json(contact);
   } catch (error) {
@@ -34,12 +34,12 @@ exports.getContactById = async (req, res, next) => {
 exports.getContactsByLeadId = async (req, res, next) => {
   try {
     const contacts = await contactRepository.getContactsByLeadId(
-      req.params.leadId
+      req.params.leadId,
     );
     if (contacts.length === 0) {
       return res
         .status(404)
-        .json({ message: "No contacts found for this lead" });
+        .json({ message: 'No contacts found for this lead' });
     }
     res.status(200).json(contacts);
   } catch (error) {
@@ -54,10 +54,10 @@ exports.updateContact = async (req, res, next) => {
     const updatedContact = await contactRepository.updateContact(
       req.params.id,
       req.body,
-      userId
+      userId,
     );
     if (!updatedContact) {
-      return res.status(404).json({ message: "Contact not found" });
+      return res.status(404).json({ message: 'Contact not found' });
     }
     res.status(200).json(updatedContact);
   } catch (error) {
@@ -70,7 +70,7 @@ exports.deleteContact = async (req, res, next) => {
   try {
     const deletedContact = await contactRepository.deleteContact(req.params.id);
     if (!deletedContact) {
-      return res.status(404).json({ message: "Contact not found" });
+      return res.status(404).json({ message: 'Contact not found' });
     }
     res.status(204).send();
   } catch (error) {

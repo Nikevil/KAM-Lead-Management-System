@@ -1,6 +1,6 @@
-const userRepository = require("../repositories/userRepository");
-const roleRepository = require("../repositories/roleRepository");
-const { Op } = require("sequelize");
+const userRepository = require('../repositories/userRepository');
+const roleRepository = require('../repositories/roleRepository');
+const { Op } = require('sequelize');
 
 exports.addUser = async (req, res, next) => {
   try {
@@ -16,11 +16,11 @@ exports.addUser = async (req, res, next) => {
         id: {
           [Op.in]: roles,
         },
-        status: "active",
+        status: 'active',
       });
 
       if (validRoles.length !== roles.length) {
-        return res.status(400).json({ message: "Invalid roles provided" });
+        return res.status(400).json({ message: 'Invalid roles provided' });
       }
     }
 
@@ -34,7 +34,7 @@ exports.addUser = async (req, res, next) => {
         status,
         phone,
       },
-      userId
+      userId,
     );
 
     // Map roles to the user by creating entries in UserRole
@@ -50,7 +50,7 @@ exports.addUser = async (req, res, next) => {
     }
 
     res.status(201).json({
-      message: "User added successfully",
+      message: 'User added successfully',
       user: {
         id: user.id,
         name: user.name,
@@ -81,7 +81,7 @@ exports.getUsers = async (req, res, next) => {
 exports.getUserById = async (req, res, next) => {
   try {
     const user = await userRepository.findUserById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: 'User not found' });
     res.status(200).json(user);
   } catch (error) {
     next(error);
@@ -99,17 +99,17 @@ exports.updateUser = async (req, res, next) => {
         id: {
           [Op.in]: roles,
         },
-        status: "active",
+        status: 'active',
       });
       if (validRoles.length !== roles.length) {
-        return res.status(400).json({ message: "Invalid roles provided" });
+        return res.status(400).json({ message: 'Invalid roles provided' });
       }
     }
 
     const user = await userRepository.updateUser(
       { username, email, phone, status },
       req.params.id,
-      userId
+      userId,
     );
 
     // Map roles to the user by creating entries in UserRole if roles are provided
@@ -122,7 +122,7 @@ exports.updateUser = async (req, res, next) => {
       await userRepository.addUserRoles(userRoles);
     }
 
-    res.status(200).json({ message: "User updated successfully", user });
+    res.status(200).json({ message: 'User updated successfully', user });
   } catch (error) {
     next(error);
   }
@@ -132,7 +132,7 @@ exports.deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userRepository.deleteUser(id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: 'User not found' });
     res.status(204).json();
   } catch (error) {
     next(error);

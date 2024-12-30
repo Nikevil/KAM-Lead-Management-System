@@ -1,4 +1,4 @@
-const roleRepository = require("../repositories/roleRepository");
+const roleRepository = require('../repositories/roleRepository');
 
 // Get all roles (GET)
 exports.getRoles = async (req, res, next) => {
@@ -17,7 +17,7 @@ exports.getRoleById = async (req, res, next) => {
   try {
     const role = await roleRepository.findRoleById(id);
     if (!role) {
-      return res.status(404).json({ message: "Role not found" });
+      return res.status(404).json({ message: 'Role not found' });
     }
     res.status(200).json(role);
   } catch (error) {

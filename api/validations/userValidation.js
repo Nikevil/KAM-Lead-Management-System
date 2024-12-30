@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 // Schema for adding a new user
 const addUserValidationSchema = Joi.object({
@@ -7,7 +7,7 @@ const addUserValidationSchema = Joi.object({
   password: Joi.string().min(6).required(),
   email: Joi.string().email().optional(),
   phone: Joi.string().min(10).max(15).required(),
-  status: Joi.string().valid("active", "inactive").optional(),
+  status: Joi.string().valid('active', 'inactive').optional(),
   roles: Joi.array().items(Joi.number()).optional(), // Role IDs (array of integers)
 });
 
@@ -17,7 +17,7 @@ const updateUserValidationSchema = Joi.object({
   username: Joi.string().min(3).max(255).optional(),
   email: Joi.string().email().optional(),
   phone: Joi.string().min(10).max(15).optional(),
-  status: Joi.string().valid("active", "inactive").optional(),
+  status: Joi.string().valid('active', 'inactive').optional(),
   roles: Joi.array().items(Joi.number()).optional(), // Role IDs (array of integers)
 });
 

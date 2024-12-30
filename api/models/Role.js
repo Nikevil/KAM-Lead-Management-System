@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Role = sequelize.define(
-    "Role",
+    'Role',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -13,23 +13,23 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       status: {
-        type: DataTypes.ENUM("active", "inactive"),
-        defaultValue: "active",
+        type: DataTypes.ENUM('active', 'inactive'),
+        defaultValue: 'active',
       },
     },
     {
-      tableName: "roles",
+      tableName: 'roles',
       timestamps: true,
-      indexes: [{ fields: ["name"], unique: true }, { fields: ["status"] }],
-    }
+      indexes: [{ fields: ['name'], unique: true }, { fields: ['status'] }],
+    },
   );
 
   // Associations
   Role.associate = (models) => {
     Role.belongsToMany(models.User, {
       through: models.UserRole,
-      foreignKey: "roleId",
-      otherKey: "userId",
+      foreignKey: 'roleId',
+      otherKey: 'userId',
     });
   };
 

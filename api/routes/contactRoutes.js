@@ -1,68 +1,68 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const contactController = require("../controllers/contactController");
-const authenticate = require("../middlewares/authenticate");
-const authorize = require("../middlewares/authorize");
-const validate = require("../middlewares/validationMiddleware");
+const contactController = require('../controllers/contactController');
+const authenticate = require('../middlewares/authenticate');
+const authorize = require('../middlewares/authorize');
+const validate = require('../middlewares/validationMiddleware');
 const {
   updateContactValidationSchema,
   validateIdSchema,
   validateLeadIdSchema,
   validateLeadContactsSchema,
-} = require("../validations/contactValidation");
+} = require('../validations/contactValidation');
 
 // Add contacts to a lead
 router.post(
-  "/lead",
+  '/lead',
   authenticate,
-  authorize(["Admin", "Kam"]),
+  authorize(['Admin', 'Kam']),
   validate({
     body: validateLeadContactsSchema,
   }),
-  contactController.addContactsToLead
+  contactController.addContactsToLead,
 );
 
 // Get a contact by ID
 router.get(
-  "/:id",
+  '/:id',
   authenticate,
   validate({
     params: validateIdSchema,
   }),
-  contactController.getContactById
+  contactController.getContactById,
 );
 
 // Get all contacts for a specific lead
 router.get(
-  "/lead/:leadId",
+  '/lead/:leadId',
   authenticate,
   validate({
     params: validateLeadIdSchema,
   }),
-  contactController.getContactsByLeadId
+  contactController.getContactsByLeadId,
 );
 
 // Update a contact by ID
 router.put(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize(["Admin", "Kam"]),
+  authorize(['Admin', 'Kam']),
   validate({
     params: validateIdSchema,
     body: updateContactValidationSchema,
   }),
-  contactController.updateContact
+  contactController.updateContact,
 );
 
 // Delete a contact by ID
 router.delete(
-  "/:id",
+  '/:id',
   authenticate,
-  authorize(["Admin"]),
+  authorize(['Admin']),
   validate({
     params: validateIdSchema,
   }),
-  contactController.deleteContact
+  contactController.deleteContact,
 );
 
 module.exports = router;

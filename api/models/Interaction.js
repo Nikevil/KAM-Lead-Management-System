@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const Interaction = sequelize.define(
-    "Interaction",
+    'Interaction',
     {
       id: {
         type: DataTypes.INTEGER,
@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
         allowNull: true,
       },
       interactionType: {
-        type: DataTypes.ENUM("call", "email", "meeting", "other"),
+        type: DataTypes.ENUM('call', 'email', 'meeting', 'other'),
         allowNull: false,
       },
       interactionDate: {
@@ -41,8 +41,8 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-          model: "orders",
-          key: "id",
+          model: 'orders',
+          key: 'id',
         },
       },
       createdBy: {
@@ -52,26 +52,26 @@ module.exports = (sequelize) => {
       updatedBy: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      }
+      },
     },
     {
-      tableName: "interactions",
+      tableName: 'interactions',
       timestamps: true,
       indexes: [
-        { fields: ["leadId"] },
-        { fields: ["createdBy"] },
-        { fields: ["contactId"] },
-        { fields: ["interactionDate"] },
+        { fields: ['leadId'] },
+        { fields: ['createdBy'] },
+        { fields: ['contactId'] },
+        { fields: ['interactionDate'] },
       ],
-    }
+    },
   );
 
   // Associations
   Interaction.associate = (models) => {
-    Interaction.belongsTo(models.Lead, { foreignKey: "leadId" });
-    Interaction.belongsTo(models.User, { foreignKey: "createdBy" });
-    Interaction.belongsTo(models.Contact, { foreignKey: "contactId" });
-    Interaction.belongsTo(models.Order, { foreignKey: "orderId" });
+    Interaction.belongsTo(models.Lead, { foreignKey: 'leadId' });
+    Interaction.belongsTo(models.User, { foreignKey: 'createdBy' });
+    Interaction.belongsTo(models.Contact, { foreignKey: 'contactId' });
+    Interaction.belongsTo(models.Order, { foreignKey: 'orderId' });
   };
 
   return Interaction;

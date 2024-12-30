@@ -1,4 +1,4 @@
-const orderRepository = require("../repositories/orderRepository");
+const orderRepository = require('../repositories/orderRepository');
 
 // Create a new order
 exports.createOrder = async (req, res, next) => {
@@ -9,7 +9,7 @@ exports.createOrder = async (req, res, next) => {
     const newOrder = await orderRepository.createOrder(orderData, userId);
 
     res.status(201).json({
-      message: "Order created successfully",
+      message: 'Order created successfully',
       order: newOrder,
     });
   } catch (error) {
@@ -27,7 +27,7 @@ exports.getOrdersByLeadId = async (req, res, next) => {
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({
-        error: "No orders found for this lead.",
+        error: 'No orders found for this lead.',
       });
     }
 
@@ -47,7 +47,7 @@ exports.getOrderById = async (req, res, next) => {
 
     if (!order) {
       return res.status(404).json({
-        error: "Order not found.",
+        error: 'Order not found.',
       });
     }
 
@@ -71,7 +71,7 @@ exports.getFilteredOrders = async (req, res, next) => {
 
     if (!filteredOrders || filteredOrders.length === 0) {
       return res.status(404).json({
-        error: "No orders found matching the criteria.",
+        error: 'No orders found matching the criteria.',
       });
     }
 
@@ -93,12 +93,12 @@ exports.updateOrder = async (req, res, next) => {
 
     if (!updatedOrder) {
       return res.status(404).json({
-        error: "Order not found.",
+        error: 'Order not found.',
       });
     }
 
     res.status(200).json({
-      message: "Order updated successfully",
+      message: 'Order updated successfully',
       order: updatedOrder,
     });
   } catch (error) {
@@ -116,7 +116,7 @@ exports.deleteOrder = async (req, res, next) => {
 
     if (!deletedOrder) {
       return res.status(404).json({
-        error: "Order not found.",
+        error: 'Order not found.',
       });
     }
 
@@ -142,7 +142,7 @@ exports.getOrderingPatterns = async (req, res, next) => {
 
     if (!patterns || patterns.length === 0) {
       return res.status(404).json({
-        error: "No ordering patterns found.",
+        error: 'No ordering patterns found.',
       });
     }
 

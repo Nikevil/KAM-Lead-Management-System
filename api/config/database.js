@@ -12,15 +12,15 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     max: 10,        // Max number of connections
     min: 0,         // Min number of connections
     acquire: 30000, // Max wait time for a connection
-    idle: 10000     // Max idle time before release
+    idle: 10000,     // Max idle time before release
   },
   define: {
     timestamps: false, // Disable automatic timestamp fields
-    freezeTableName: true // Disable auto pluralization of model names
+    freezeTableName: true, // Disable auto pluralization of model names
   },
   retry: {
-    max: 3 // Retry connection up to 3 times
-  }
+    max: 3, // Retry connection up to 3 times
+  },
 });
 
 

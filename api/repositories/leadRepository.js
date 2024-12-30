@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require('../models');
 const { Op } = db.Sequelize;
 
 class LeadRepository {
@@ -19,7 +19,7 @@ class LeadRepository {
         location,
       },
     });
-    if (existingLead) throw new Error("Lead already exists");
+    if (existingLead) throw new Error('Lead already exists');
   }
 
   // Create a new lead
@@ -30,7 +30,7 @@ class LeadRepository {
   // Update a lead by ID
   async updateLead(id, leadData, userId) {
     const lead = await db.Lead.findByPk(id);
-    if (!lead) throw new Error("Lead not found");
+    if (!lead) throw new Error('Lead not found');
     return await lead.update({...leadData, updatedBy: userId});
   }
 
@@ -58,7 +58,7 @@ class LeadRepository {
 
       return leads;
     } catch (error) {
-      throw new Error("Error fetching leads requiring calls: " + error.message);
+      throw new Error('Error fetching leads requiring calls: ' + error.message);
     }
   }
 
@@ -67,7 +67,7 @@ class LeadRepository {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
-        throw new Error("Lead not found");
+        throw new Error('Lead not found');
       }
 
       const today = new Date();
@@ -77,7 +77,7 @@ class LeadRepository {
       await lead.update({ lastCallDate: today, nextCallDate, updatedBy: userId });
       return lead;
     } catch (error) {
-      throw new Error("Error recording call: " + error.message);
+      throw new Error('Error recording call: ' + error.message);
     }
   }
 
@@ -86,7 +86,7 @@ class LeadRepository {
     try {
       const lead = await db.Lead.findByPk(leadId);
       if (!lead) {
-        throw new Error("Lead not found");
+        throw new Error('Lead not found');
       }
 
       const nextCallDate = new Date();
@@ -95,7 +95,7 @@ class LeadRepository {
       await lead.update({ callFrequency, nextCallDate, updatedBy: userId });
       return lead;
     } catch (error) {
-      throw new Error("Error updating call frequency: " + error.message);
+      throw new Error('Error updating call frequency: ' + error.message);
     }
   }
 
@@ -106,14 +106,14 @@ class LeadRepository {
     const frequencyThreshold = parseInt(process.env.FREQUENCY_THRESHOLD) || 3; // Default to 3 orders
 
     const thresholdDate = new Date(
-      new Date() - thresholdDays * 24 * 60 * 60 * 1000
+      new Date() - thresholdDays * 24 * 60 * 60 * 1000,
     ); // Days for performance tracking
 
     const leads = await db.Lead.findAll({
       include: [
         {
           model: db.Order,
-          attributes: ["id", "orderDate", "amount"],
+          attributes: ['id', 'orderDate', 'amount'],
           where: {
             orderDate: {
               [Op.gte]: thresholdDate, // Orders in the last `thresholdDays` days
@@ -122,14 +122,14 @@ class LeadRepository {
           required: true,
         },
       ],
-      attributes: ["id", "restaurantName"],
+      attributes: ['id', 'restaurantName'],
     });
 
     return leads
       .map((lead) => {
         const totalOrderValue = lead.Orders.reduce(
           (sum, order) => sum + order.amount,
-          0
+          0,
         );
         return {
           id: lead.id,
@@ -141,7 +141,7 @@ class LeadRepository {
       .filter(
         (lead) =>
           lead.orderCount >= frequencyThreshold &&
-          lead.totalOrderValue >= thresholdAmount
+          lead.totalOrderValue >= thresholdAmount,
       ); // Filter based on frequency and total order value
   }
 
@@ -153,14 +153,14 @@ class LeadRepository {
     const frequencyThreshold = parseInt(process.env.FREQUENCY_THRESHOLD) || 3; // Default to 3 orders
 
     const thresholdDate = new Date(
-      new Date() - underPerformingDays * 24 * 60 * 60 * 1000
+      new Date() - underPerformingDays * 24 * 60 * 60 * 1000,
     ); // Orders before `underPerformingDays` days
 
     const leads = await db.Lead.findAll({
       include: [
         {
           model: db.Order,
-          attributes: ["id", "orderDate", "amount"],
+          attributes: ['id', 'orderDate', 'amount'],
           where: {
             orderDate: {
               [Op.lte]: thresholdDate, // Orders before the last `underPerformingDays` days
@@ -169,14 +169,14 @@ class LeadRepository {
           required: false, // Include leads with no orders as well
         },
       ],
-      attributes: ["id", "restaurantName"],
+      attributes: ['id', 'restaurantName'],
     });
 
     return leads
       .map((lead) => {
         const totalOrderValue = lead.Orders.reduce(
           (sum, order) => sum + order.amount,
-          0
+          0,
         );
         return {
           id: lead.id,
@@ -188,7 +188,7 @@ class LeadRepository {
       .filter(
         (lead) =>
           lead.orderCount < frequencyThreshold ||
-          lead.totalOrderValue < thresholdAmount
+          lead.totalOrderValue < thresholdAmount,
       ); // Leads with low frequency or total order value
   }
 
@@ -198,19 +198,19 @@ class LeadRepository {
       include: [
         {
           model: db.Order,
-          attributes: ["id", "orderDate", "amount"],
+          attributes: ['id', 'orderDate', 'amount'],
         },
       ],
-      attributes: ["id", "restaurantName"],
+      attributes: ['id', 'restaurantName'],
     });
 
     if (!lead) {
-      throw new Error("Lead not found");
+      throw new Error('Lead not found');
     }
 
     const totalOrderValue = lead.Orders.reduce(
       (sum, order) => sum + order.amount,
-      0
+      0,
     );
     const orderFrequency = lead.Orders.length;
 
@@ -227,12 +227,12 @@ class LeadRepository {
       // Update the userId for all leads associated with the oldUserId
       const result = await db.Lead.update(
         { userId: newUserId, updatedById: userId },
-        { where: { userId: oldUserId } }
+        { where: { userId: oldUserId } },
       );
 
       return result;
     } catch (error) {
-      throw new Error("Error transferring leads: " + error.message);
+      throw new Error('Error transferring leads: ' + error.message);
     }
   }
 }

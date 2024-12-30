@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 // Schema for getting all roles with optional filters (GET /roles)
 const getRolesValidationSchema = Joi.object({

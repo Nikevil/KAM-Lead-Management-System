@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
-const db = require("../models");
+const { Op } = require('sequelize');
+const db = require('../models');
 
 class OrderRepository {
   // Create a new order
@@ -12,7 +12,7 @@ class OrderRepository {
       });
       return newOrder;
     } catch (error) {
-      throw new Error("Error creating order: " + error.message);
+      throw new Error('Error creating order: ' + error.message);
     }
   }
 
@@ -20,11 +20,11 @@ class OrderRepository {
   async getOrderById(id) {
     try {
       const order = await db.Order.findByPk(id, {
-        include: ["lead"],
+        include: ['lead'],
       });
       return order;
     } catch (error) {
-      throw new Error("Error fetching order: " + error.message);
+      throw new Error('Error fetching order: ' + error.message);
     }
   }
 
@@ -33,11 +33,11 @@ class OrderRepository {
     try {
       const orders = await db.Order.findAll({
         where: { leadId },
-        include: ["lead"],
+        include: ['lead'],
       });
       return orders;
     } catch (error) {
-      throw new Error("Error fetching orders by lead ID: " + error.message);
+      throw new Error('Error fetching orders by lead ID: ' + error.message);
     }
   }
 
@@ -46,13 +46,13 @@ class OrderRepository {
     try {
       const order = await db.Order.findByPk(id);
       if (!order) {
-        throw new Error("Order not found");
+        throw new Error('Order not found');
       }
 
       // Update the order details
       return await order.update({ ...orderData, updatedBy: userId });
     } catch (error) {
-      throw new Error("Error updating order: " + error.message);
+      throw new Error('Error updating order: ' + error.message);
     }
   }
 
@@ -65,7 +65,7 @@ class OrderRepository {
       }
       return await order.destroy(); // Delete the order from the database
     } catch (error) {
-      throw new Error("Error deleting order: " + error.message);
+      throw new Error('Error deleting order: ' + error.message);
     }
   }
 
@@ -88,11 +88,11 @@ class OrderRepository {
 
       const orders = await db.Order.findAll({
         where: whereClause,
-        include: ["lead"],
+        include: ['lead'],
       });
       return orders;
     } catch (error) {
-      throw new Error("Error fetching filtered orders: " + error.message);
+      throw new Error('Error fetching filtered orders: ' + error.message);
     }
   }
 
@@ -107,7 +107,7 @@ class OrderRepository {
             endDate ? new Date(endDate) : new Date(),
           ],
         },
-        status: "completed",
+        status: 'completed',
       };
 
       if (leadId) {
@@ -117,40 +117,40 @@ class OrderRepository {
       // Query to calculate ordering patterns
       const patterns = await db.Order.findAll({
         attributes: [
-          "leadId",
+          'leadId',
           [
-            db.Sequelize.fn("unnest", db.Sequelize.col("productCategories")),
-            "category",
+            db.Sequelize.fn('unnest', db.Sequelize.col('productCategories')),
+            'category',
           ],
           [
-            db.Sequelize.fn("COUNT", db.Sequelize.col("Order.id")),
-            "totalOrders",
+            db.Sequelize.fn('COUNT', db.Sequelize.col('Order.id')),
+            'totalOrders',
           ],
           [
-            db.Sequelize.fn("SUM", db.Sequelize.col("amount")),
-            "totalAmountSpent",
+            db.Sequelize.fn('SUM', db.Sequelize.col('amount')),
+            'totalAmountSpent',
           ],
           [
             db.Sequelize.fn(
-              "AVG",
-              db.Sequelize.literal(`DATE_PART('day', NOW() - "orderDate")`)
+              'AVG',
+              db.Sequelize.literal('DATE_PART(\'day\', NOW() - "orderDate")'),
             ),
-            "averageDaysBetweenOrders",
+            'averageDaysBetweenOrders',
           ],
         ],
         where: whereClause,
         group: [
-          "leadId",
-          "category",
-          "lead.id",
-          "lead.restaurantName",
-          "lead.location",
+          'leadId',
+          'category',
+          'lead.id',
+          'lead.restaurantName',
+          'lead.location',
         ],
         include: [
           {
             model: db.Lead,
-            as: "lead",
-            attributes: ["id", "restaurantName", "location"],
+            as: 'lead',
+            attributes: ['id', 'restaurantName', 'location'],
           },
         ],
         limit,
@@ -160,17 +160,17 @@ class OrderRepository {
 
       return patterns.map((result) => ({
         leadId: result.leadId,
-        restaurantName: result["lead.restaurantName"],
-        location: result["lead.location"],
+        restaurantName: result['lead.restaurantName'],
+        location: result['lead.location'],
         category: result.category,
         totalOrders: parseInt(result.totalOrders, 10),
         totalAmountSpent: parseFloat(result.totalAmountSpent).toFixed(2),
         averageDaysBetweenOrders: parseFloat(
-          result.averageDaysBetweenOrders
+          result.averageDaysBetweenOrders,
         ).toFixed(2),
       }));
     } catch (error) {
-      throw new Error("Error fetching ordering patterns: " + error.message);
+      throw new Error('Error fetching ordering patterns: ' + error.message);
     }
   }
 }
