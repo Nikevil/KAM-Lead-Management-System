@@ -13,10 +13,6 @@ module.exports = (sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
       contactId: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -63,7 +59,7 @@ module.exports = (sequelize) => {
       timestamps: true,
       indexes: [
         { fields: ["leadId"] },
-        { fields: ["userId"] },
+        { fields: ["createdBy"] },
         { fields: ["contactId"] },
         { fields: ["interactionDate"] },
       ],
@@ -73,7 +69,7 @@ module.exports = (sequelize) => {
   // Associations
   Interaction.associate = (models) => {
     Interaction.belongsTo(models.Lead, { foreignKey: "leadId" });
-    Interaction.belongsTo(models.User, { foreignKey: "userId" });
+    Interaction.belongsTo(models.User, { foreignKey: "createdBy" });
     Interaction.belongsTo(models.Contact, { foreignKey: "contactId" });
     Interaction.belongsTo(models.Order, { foreignKey: "orderId" });
   };

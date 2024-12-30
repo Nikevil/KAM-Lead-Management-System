@@ -34,7 +34,6 @@ const createInteractionValidationSchema = Joi.object({
 // Schema for updating an existing interaction
 const updateInteractionValidationSchema = Joi.object({
   leadId: Joi.number().integer().optional(),
-  userId: Joi.number().integer().optional().allow(null),
   contactId: Joi.number().integer().optional().allow(null),
   interactionType: Joi.string().valid("call", "email", "meeting", "other").optional(),
   interactionDate: Joi.date().optional(),

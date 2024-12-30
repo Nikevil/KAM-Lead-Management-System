@@ -3,24 +3,57 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize.js");
+const validate = require("../middlewares/validationMiddleware");
+const {
+  addUserValidationSchema,
+  updateUserValidationSchema,
+  userIdValidationSchema,
+} = require("../validations/userValidation");
 
 // Route to create a new user (requires authentication and authorization)
-router.post("/", authenticate, authorize("Admin"), userController.addUser);
+router.post(
+  "/",
+  authenticate,
+  authorize("Admin"),
+  validate({
+    body: addUserValidationSchema,
+  }),
+  userController.addUser
+);
 
 // Route to get all users (requires authentication and authorization)
 router.get("/", authenticate, userController.getUsers);
 
 // Route to get a specific user by its ID (requires authentication and authorization)
-router.get("/:id", authenticate, userController.getUserById);
+router.get(
+  "/:id",
+  authenticate,
+  validate({
+    params: userIdValidationSchema,
+  }),
+  userController.getUserById
+);
 
 // Route to update a user by its ID (requires authentication and authorization)
-router.put("/:id", authenticate, authorize("Admin"), userController.updateUser);
+router.put(
+  "/:id",
+  authenticate,
+  authorize("Admin"),
+  validate({
+    params: userIdValidationSchema,
+    body: updateUserValidationSchema,
+  }),
+  userController.updateUser
+);
 
 // Route to delete a user by its ID (requires authentication and authorization)
 router.delete(
   "/:id",
   authenticate,
   authorize("Admin"),
+  validate({
+    params: userIdValidationSchema,
+  }),
   userController.deleteUser
 );
 

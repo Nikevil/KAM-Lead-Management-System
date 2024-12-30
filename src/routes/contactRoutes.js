@@ -5,7 +5,6 @@ const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize");
 const validate = require("../middlewares/validationMiddleware");
 const {
-  createContactValidationSchema,
   updateContactValidationSchema,
   validateIdSchema,
   validateLeadIdSchema,

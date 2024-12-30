@@ -11,18 +11,24 @@ router.post(
   "/",
   authenticate,
   authorize(["Admin", "Kam"]),
-  validate(createInteractionValidationSchema),
+  validate({
+    body: createInteractionValidationSchema,
+  }),
   interactionController.addInteraction
 );
 
 // Route to get interactions by id (requires authentication)
-router.get("/:id", authenticate, validate(validateIdSchema), interactionController.getInteractionById);
+router.get("/:id", authenticate, validate({
+  params: validateIdSchema
+}), interactionController.getInteractionById);
 
 // Route to get all interactions for a specific lead (requires authentication)
 router.get(
   "/lead/:leadId",
   authenticate,
-  validate(validateLeadIdSchema),
+  validate({
+    params: validateLeadIdSchema
+  }),
   interactionController.getInteractionsByLeadId
 );
 
@@ -31,8 +37,10 @@ router.put(
   "/:id",
   authenticate,
   authorize(["Admin", "Kam"]),
-  validate(validateIdSchema),
-  validate(updateInteractionValidationSchema),
+  validate({
+    params: validateIdSchema,
+    body: updateInteractionValidationSchema
+  }),
   interactionController.updateInteraction
 );
 
@@ -41,7 +49,9 @@ router.delete(
   "/:id",
   authenticate,
   authorize(["Admin"]),
-  validate(validateIdSchema),
+  validate({
+    params: validateIdSchema
+  }),
   interactionController.deleteInteraction
 );
 

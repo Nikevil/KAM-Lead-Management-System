@@ -3,12 +3,27 @@ const leadController = require("../controllers/leadController");
 const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
 const authorize = require("../middlewares/authorize");
+const validate = require("../middlewares/validationMiddleware");
+const {
+  addLeadValidationSchema,
+  updateLeadValidationSchema,
+  getLeadPerformanceMetricsValidationSchema,
+  updateCallFrequencyValidationSchema,
+  recordCallValidationSchema,
+  transferLeadsValidationSchema,
+  getLeadPerformanceMetricsValidationSchema,
+  validateIdSchema,
+  validateLeadIdSchema
+} = require("../validations/leadValidation");
 
 // Add a new lead
 router.post(
   "/",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    body: addLeadValidationSchema
+  }),
   leadController.addLead
 );
 
@@ -49,6 +64,9 @@ router.get(
   "/performance",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    query: getLeadPerformanceMetricsValidationSchema
+  }),
   leadController.getLeadPerformanceMetrics
 );
 
@@ -57,6 +75,9 @@ router.put(
   "/transfer-leads",
   authenticate,
   authorize(["Admin"]),
+  validate({
+    body: transferLeadsValidationSchema
+  }),
   leadController.transferLeads
 );
 
@@ -65,6 +86,9 @@ router.get(
   "/:id",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    params: validateIdSchema
+  }),
   leadController.getLeadById
 );
 
@@ -73,6 +97,10 @@ router.put(
   "/:id",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+   params: validateIdSchema,
+   body: updateLeadValidationSchema
+   }),
   leadController.updateLead
 );
 
@@ -81,6 +109,9 @@ router.delete(
   "/:id",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    params: validateIdSchema
+  }),
   leadController.deleteLead
 );
 
@@ -89,6 +120,10 @@ router.patch(
   "/call-frequency/:leadId",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    params: validateLeadIdSchema,
+    body: updateCallFrequencyValidationSchema,
+  }),
   leadController.updateCallFrequency
 );
 
@@ -97,6 +132,9 @@ router.patch(
   "/record-call/:leadId",
   authenticate,
   authorize(["Admin", "Kam"]),
+  validate({
+    params: recordCallValidationSchema,
+  }),
   leadController.recordCall
 );
 

@@ -5,10 +5,7 @@ exports.addInteraction = async (req, res, next) => {
   try {
     const interactionData = req.body;
     const userId = req.user.id;
-    const newInteraction = await interactionRepository.createInteraction({
-      ...interactionData,
-      userId,
-    });
+    const newInteraction = await interactionRepository.createInteraction(interactionData, userId);
     res
       .status(201)
       .json({ message: "Interaction created", interaction: newInteraction });
