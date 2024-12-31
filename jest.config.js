@@ -18,7 +18,6 @@ module.exports = {
     '!api/models/*.js',
     '!api/routes/*.js',
     '!api/utils/*.js',
-    '!api/repositories/*.js',
     '!api/app.js',
     '!api/server.js',
   ],

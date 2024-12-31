@@ -73,9 +73,6 @@ describe('User Controller', () => {
       // Call the function
       await addUser(req, res, next);
       
-      // Debugging: Log the response JSON mock calls to compare
-      console.log('JSON Response:', res.json.mock.calls);
-      
       // Assert the correct response
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({

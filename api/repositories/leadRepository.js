@@ -40,7 +40,7 @@ class LeadRepository {
     if (!lead) {
       return null;
     }
-    return db.Lead.destroy();
+    return await lead.destroy();
   }
 
   async getLeadsRequiringCalls() {

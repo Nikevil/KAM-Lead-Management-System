@@ -78,6 +78,14 @@ class OrderRepository {
         whereClause.orderDate = {
           [Op.between]: [startDate, endDate],
         };
+      } else if (startDate) {
+        whereClause.orderDate = {
+          [Op.gte]: startDate,
+        };
+      } else if (endDate) {
+        whereClause.orderDate = {
+          [Op.lte]: endDate,
+        };
       }
 
       if (productCategory) {
