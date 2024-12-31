@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/userRepository');
 const logger = require('../utils/logger');
 
-// Middleware to authenticate the user
 const authenticate = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
 
@@ -12,7 +11,7 @@ const authenticate = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    
     const user = await userRepository.findUserById(decoded.id);
 
     if (!user) {
@@ -20,11 +19,14 @@ const authenticate = async (req, res, next) => {
     }
 
     req.user = user;
-
     next();
   } catch (err) {
-    logger.error(err);
-    return res.status(401).json({ message: 'Invalid or expired token' });
+    if (err instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({ message: 'Invalid or expired token' });
+    }
+
+    logger.error('Authentication error:', err);
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
