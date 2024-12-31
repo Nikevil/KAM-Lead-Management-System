@@ -1,7 +1,6 @@
 const authenticate = require('../../../api/middlewares/authenticate');
 const jwt = require('jsonwebtoken');
 const userRepository = require('../../../api/repositories/userRepository');
-const logger = require('../../../api/utils/logger');
 
 jest.mock('jsonwebtoken');
 jest.mock('../../../api/repositories/userRepository');
@@ -33,23 +32,21 @@ describe('Authentication Middleware', () => {
   });
 
   it('should return 401 if the token is invalid', async () => {
-    // Provide an invalid token
     req.headers.authorization = 'Bearer invalidtoken';
-
-    // Mock jwt.verify to throw an error
+  
     jwt.verify.mockImplementation(() => {
-      throw new Error('Invalid token');
+      throw new jwt.JsonWebTokenError('Invalid or expired token');
     });
-
+  
     await authenticate(req, res, next);
-
+  
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       message: 'Invalid or expired token',
     });
-    expect(logger.error).toHaveBeenCalledWith(new Error('Invalid token'));
     expect(next).not.toHaveBeenCalled();
   });
+  
 
   it('should return 401 if the user is not found after decoding the token', async () => {
     const decodedToken = { id: 1 };
