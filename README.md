@@ -19,15 +19,11 @@ Lead management system for Key Account Managers (KAMs) handling B2B restaurant a
 ## Environment Setup
 
 1. Clone repository
-2. Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+2. Create new `.env` file:
 
 3. Configure environment variables:
 ```
 # This file contains the environment variables that are used in the application.
-process.env.NODE_ENV = 'production'
 
 # Database Configuration
 DATABASE_URL= "postgresql://user:password@localhost:5432/kam_db"
@@ -66,7 +62,6 @@ npm run dev
 
 Production:
 ```bash
-npm run build
 npm start
 ```
 
@@ -74,7 +69,7 @@ npm start
 
 Run tests:
 ```bash
-npm test
+npm run test
 ```
 
 Coverage report:
@@ -105,8 +100,8 @@ Key tables:
 
 The application is deployed at: https://kam-production.up.railway.app/
 
-CI/CD pipeline runs on merge to main branch:
-1. Build application
+CI/CD pipeline runs on merge to `Production` branch:
+1. Install packages
 2. Deploy to production
 
 ## Contributing
