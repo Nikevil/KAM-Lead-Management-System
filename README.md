@@ -85,6 +85,14 @@ Complete API documentation available at: https://documenter.getpostman.com/view/
 
 Base URL: https://kam-production.up.railway.app/
 
+Note:- Use below Creds For Admin Access:
+```
+{
+    "username": "johndoe123",
+    "password": "securepassword!"
+}
+```
+
 Authentication: Bearer token required for all endpoints except `/auth`
 
 ## Database Schema
