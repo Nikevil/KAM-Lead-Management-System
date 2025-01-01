@@ -2,7 +2,7 @@ const userRepository = require('../../../api/repositories/userRepository');
 const db = require('../../../api/models'); // Sequelize models
 
 // Mock the required models
-jest.mock('../../../api/models'); // Mock db.User, db.Role, etc.
+jest.mock('../../../api/models');
 
 describe('UserRepository', () => {
   beforeEach(() => {
@@ -202,6 +202,54 @@ describe('UserRepository', () => {
       await expect(userRepository.deleteUser(1))
         .rejects
         .toThrow('Error deleting order: Error deleting user');
+    });
+  });
+
+  describe('updateUserPassword', () => {
+    const userId = 1;
+    const newPassword = 'newpassword123';
+    
+    beforeEach(() => {
+      // Reset all mocks before each test
+      db.User.update.mockClear();
+    });
+  
+    it('should update the password successfully', async () => {
+      db.User.update.mockResolvedValue([1]); 
+  
+      const result = await userRepository.updateUserPassword(userId, newPassword);
+  
+      // Check that the db.User.update method was called with the correct parameters
+      expect(db.User.update).toHaveBeenCalledWith(
+        { password: newPassword, updatedBy: userId },
+        { where: { id: userId }, individualHooks: true },
+      );
+  
+      // Check that the result is what we expect
+      expect(result).toEqual([1]); // You can adjust based on what the method returns
+    });
+  
+    it('should throw an error when db.User.update fails', async () => {
+      // Mock the failed response from db.User.update
+      const errorMessage = 'Database error';
+      db.User.update.mockRejectedValue(new Error(errorMessage));
+  
+      await expect(userRepository.updateUserPassword(userId, newPassword))
+        .rejects
+        .toThrowError('Error updating password: ' + errorMessage);
+    });
+  
+    it('should call db.User.update with correct arguments', async () => {
+      db.User.update.mockResolvedValue([1]); // Mock resolved value
+  
+      // Call the function
+      await userRepository.updateUserPassword(userId, newPassword);
+  
+      // Verify the arguments passed to db.User.update
+      expect(db.User.update).toHaveBeenCalledWith(
+        { password: newPassword, updatedBy: userId },
+        { where: { id: userId }, individualHooks: true },
+      );
     });
   });
 });

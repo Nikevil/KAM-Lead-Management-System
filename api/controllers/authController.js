@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/userRepository');
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   const { username, password } = req.body;
   try {
     // Fetch user along with their associated roles
@@ -30,6 +30,34 @@ exports.login = async (req, res) => {
     );
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
+  const { username, oldPassword, newPassword } = req.body;
+  const userId = req.user.id;
+  try {
+    // Fetch user by username
+    const user = await userRepository.findUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if old password matches
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(401)
+        .json({ message: 'Old password is incorrect' });
+    }
+
+    // Update user's password
+    await userRepository.updateUserPassword(userId, newPassword);
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
   }
 };

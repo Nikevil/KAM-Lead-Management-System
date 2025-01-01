@@ -1,6 +1,7 @@
 const { app, loadRoutes } = require('./app');
 const sequelize = require('./config/database');
 const logger = require('./utils/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 // Start the server
 const PORT = process.env.PORT || 3000;
@@ -10,6 +11,8 @@ const init = async () => {
     // Ensure routes are loaded before starting the server
     await loadRoutes();
     logger.info('Routes loaded successfully.');
+
+    app.use(errorHandler);
 
     // Attempt to connect to the database
     await sequelize.authenticate();
