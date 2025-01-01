@@ -93,6 +93,18 @@ class UserRepository {
       throw new Error('Error deleting order: ' + error.message);
     }
   }
+
+  // Update user password
+  async updateUserPassword(userId, newPassword) {
+    try {
+      return await db.User.update(
+        { password: newPassword, updatedBy: userId },
+        { where: { id: userId }, individualHooks: true },
+      );
+    } catch (error) {
+      throw new Error('Error updating password: ' + error.message);
+    }
+  }
 }
 
 module.exports = new UserRepository();
